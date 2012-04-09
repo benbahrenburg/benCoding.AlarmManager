@@ -1,0 +1,11 @@
+.metadata
+.metadata/
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+*Thumbs.db
+build/
+build.log
+.fastdev.lock
