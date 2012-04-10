@@ -1,0 +1,284 @@
+<h1>benCoding.AlarmManager Module</h1>
+
+<p>The benCoding.AlarmManager module enables you to use the native Android AlarmManager in your Titanium apps to schedule notifications and services.</p>
+
+<p>This project can be found on github at https://github.com/benbahrenburg/benCoding.AlarmManager</p>
+
+<h2>Before you start</h2>
+
+<ul>
+<li>This is an Android module designed to work with Titanium SDK 1.8.2 or greater.</li>
+<li>Before using this module you first need to install the package. If you need instructions on how to install a 3rd party module please read this installation guide.</li>
+</ul>
+
+<h2>What is in the repo?</h2>
+
+<h2>Download the release</h2>
+
+<p>To get the module, go to the Module/dist folder. This will have a release compiled for anyone download it from github.</p>
+
+<h2>Building from source?</h2>
+
+<p>If you are building from source you will need to do the following:
+* Update your .classpath file fit your environment
+* Update the build.properties to have the correct paths for your environment</p>
+
+<h2>Setup</h2>
+
+<ul>
+<li>Download the latest release from the releases folder ( or you can build it yourself )</li>
+<li>Install the bencoding.sms module. If you need help here is a "How To" <a href="https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules">guide</a>. </li>
+<li>You can now use the module via the commonJS require method, example shown below.</li>
+<li>You will also need to add the receivers into your tiapp.xml file.</li>
+</ul>
+
+<pre><code>
+var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
+</code></pre>
+
+<p>Now we have the module installed and avoid in our project we can start to use the components, see the feature guide below for details.</p>
+
+<h2>benCoding.AlarmManager How To Example</h2>
+
+<p>For a detailed example on how to use this module, please download the example project located in the ExampleProject folder on github.</p>
+
+<h2>Receivers</h2>
+
+<p>Android Alarm's work using BroadcastReceivers.  In order to have your Titanium project subscribe to the Alarms it generates you need to add the receivers into your tiapp.xml file.</p>
+
+<p>The benCoding.AlarmManager uses two receivers. One for each kind of Alarm you can schedule.  See below for the example.</p>
+
+<pre><code>&lt;receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"&gt;&lt;/receiver&gt;
+&lt;receiver android:name="bencoding.alarmmanager.AlarmServiceListener"&gt;&lt;/receiver&gt; 
+</code></pre>
+
+<p>Given all of the different configuration options needed, I highly recommend starting with the ExampleProject before incorporating into another project.</p>
+
+<p>You can reach more about BroadcastReceivers <a href="http://developer.android.com/reference/android/content/BroadcastReceiver.html">here.</a></p>
+
+<h2>Methods</h2>
+
+<h3>addAlarmNotification</h3>
+
+<p>The addAlarmNotification allows you to schedule an Alarm that will then create an notification.</p>
+
+<p>You can create an AlarmNotification using the below properties:</p>
+
+<ul>
+<li><b>minute</b> - (Required) The minute of the start time. </li>
+<li><b>hour</b> - (Optional) The hour you want to start the alarm</li>
+<li><b>day</b> - (Optional) The day you want to start the alarm</li>
+<li><b>month</b> - (Optional) The month you want to start the alarm</li>
+<li><b>year</b> - (Optional) The year you want to start the alarm</li>
+<li><b>contentTitle</b> - (Required) The title of the notification</li>
+<li><b>contentText</b> - (Required) The text of the notification</li>
+<li><b>icon</b> - (Optional)The icon of the notification</li>
+<li><b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.</li>
+</ul>
+
+<p>Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from today and add the number of minutes provided.</p>
+
+<p>The valid repeat options are:
+* hourly
+* daily
+* monthly
+* yearly</p>
+
+<p>You can also provide a millisecond value to schedule your own repeat frequency.</p>
+
+<h3>addAlarmService</h3>
+
+<p>The addAlarmService allows you to schedule an Alarm that will run a service within your Titanium App.</p>
+
+<p>Before using this method you will need to define a service and re-compile your project. After recompiling your project open your /build/AndroidManifest.xml to file your full service name.  This is important as Titanium generates this name. To learn more about Android Services please read the documentation <a href="http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Service-object">here</a>.</p>
+
+<p>You can create an AlarmService using the below properties:</p>
+
+<ul>
+<li><b>service</b> - (Required) The full service name from your AndroidManifest.xml to be run.</li>
+<li><b>minute</b> - (Required) The minute of the start time. </li>
+<li><b>hour</b> - (Optional) The hour you want to start the alarm</li>
+<li><b>day</b> - (Optional) The day you want to start the alarm</li>
+<li><b>month</b> - (Optional) The month you want to start the alarm</li>
+<li><b>year</b> - (Optional) The year you want to start the alarm</li>
+<li><b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.</li>
+</ul>
+
+<p>Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from today and add the number of minutes provided.</p>
+
+<p>The valid repeat options are:
+* hourly
+* daily
+* monthly
+* yearly</p>
+
+<p>You can also provide a millisecond value to schedule your own repeat frequency.</p>
+
+<h3>cancelAlarmNotification</h3>
+
+<p>This method cancels all alarms submitted using the addAlarmNotification method.  Unfortunately if you want to cancel only one alarm you need to cancel them all and re-submit.  This is due to how Android handles pendingIntents.</p>
+
+<h3>cancelAlarmService</h3>
+
+<p>This method cancels all alarms submitted using the addAlarmService method.  Unfortunately if you want to cancel only one alarm you need to cancel them all and re-submit.  This is due to how Android handles pendingIntents.</p>
+
+<h3>Method Usage Example</h3>
+
+<p>The below example shows how to use all of the methods. For additional samples please see the example folder contained within the module or <a href="https://github.com/benbahrenburg/benCoding.SMS/tree/master/example">here on Github</a>.</p>
+
+<pre><code>
+//Import our module into our Titanium App
+var alarmModule = require('bencoding.alarmmanager');
+var alarmManager = alarmModule.createAlarmManager();
+
+//Create a date variable to be used later 
+var now = new Date();
+
+//Set an Alarm to publish a notification in about two minutes
+alarmManager.addAlarmNotification({
+    icon: Ti.Android.R.drawable.stat_notify_sync, //Optional icon must be a resource id or url
+    minute:2, //Set the number of minutes until the alarm should go off
+    contentTitle:'Alarm #2', //Set the title of the Notification that will appear
+    contentText:'Alarm &amp; Notify Basic Repeat' //Set the body of the notification that will apear
+});    
+var ew1 = Ti.UI.createAlertDialog({
+    title:'Info', message:"You should see your alarm notification in about 2 minutes &amp; repeat each minute",
+    buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
+});
+ew1.show();
+
+//Below is an example on how you can provide a full date to schedule your alarm
+//Set an Alarm to publish a notification in about two minutes and repeat each minute
+alarmManager.addAlarmNotification({        
+    year: now.getFullYear(),
+    month: now.getMonth(),
+    day: now.getDate(),
+    hour: now.getHours(),
+    minute: now.getMinutes() + 2, //Set the number of minutes until the alarm should go off
+    contentTitle:'Alarm #3', //Set the title of the Notification that will appear
+    contentText:'Alarm &amp; Notify Scheduled', //Set the body of the notification that will apear
+    repeat:60000 //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
+    //Or as shown above you can provide the millesecond value   
+});    
+var ew2 = Ti.UI.createAlertDialog({
+    title:'Info', message:"You should see your alarm notification in about 2 minutes",
+    buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
+});
+ ew2.show();
+
+//Cancel our Notification based Alarms 
+alarmManager.cancelAlarmNotification();    
+var ew9 = Ti.UI.createAlertDialog({
+    title:'Info', message:"Your alarm notification has been cancelled",
+    buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
+});
+ew9.show();
+
+//Schedule a service to be run (once) in about two minutes    
+alarmManager.addAlarmService({
+    //The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
+    service:'com.appworkbench.alarmtest.TestserviceService',        
+    minute:2 //Set the number of minutes until the alarm should go off
+});    
+var ew5 = Ti.UI.createAlertDialog({
+    title:'Info', message:"The Service provided will be started in about 2 minutes",
+    buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
+});
+ew5.show();
+
+//Schedule a service to be run (once) in about two minutes, then to run at the same time each day
+alarmManager.addAlarmService({    
+    //The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
+    service:'com.appworkbench.alarmtest.TestserviceService',            
+    year: now.getFullYear(),
+    month: now.getMonth(),
+    day: now.getDate(),
+    hour: now.getHours(),
+    minute: now.getMinutes() + 2, //Set the number of minutes until the alarm should go off
+    repeat:'daily' //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
+});    
+var ew8 = Ti.UI.createAlertDialog({
+    title:'Info', message:"You should see your alarm notification in about 2 minutes &amp; repeat each day",
+    buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
+});
+ew8.show();
+
+alarmManager.cancelAlarmService();    
+var ew10 = Ti.UI.createAlertDialog({
+    title:'Info', message:"Your alarm service has been cancelled",
+    buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
+});
+ew10.show();
+
+</code></pre>
+
+<h2>FAQ</h2>
+
+<h3>Can I schedule application events?</h3>
+
+<p>Since your application needs to be active to receive these events it is best to use the Alarm Service to schedule a background service in your application. This will ensure the app is awake and you can generate events from there.</p>
+
+<h3>How does cancel work?</h3>
+
+<p>Android handles the cancel action at a PendingIntent level.  This means that when you call cancelAlarmNotification it cancels any Alarm you've schedule using addAlarmNotification.  The same is true to cancelAlarmService and addAlarmService.</p>
+
+<h3>Can I use my own Notification icons?</h3>
+
+<p>Yes but the URL must be an image located in Resources/android/images/ or an Android content URI.</p>
+
+<h3>Can I schedule an interval service?</h3>
+
+<p>No, it is not recommended that you mix alarms and interval services.  If this is needed, you can schedule a service to create an interval service. But, I would caution against mixing repeating service types.</p>
+
+<h3>My project isn't receiving alarm</h3>
+
+<p>Please make sure you have the correct receiver entries setup in your tiapp.xml file.  See the ExampleProject for details. Additionally after adding the receiver entries you will need to clean your project and relaunch the emulator.</p>
+
+<h3>Why does it restart my app when I click on the notification?</h3>
+
+<p>You need to make sure you have the singleTask launchMode set in your tiapp.xml file.  See below for a snippet and the ExampleProject for an full example.</p>
+
+<pre><code>&lt;android xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+    &lt;manifest&gt;
+        &lt;supports-screens android:anyDensity="false"/&gt;
+        &lt;application&gt;
+            &lt;activity android:alwaysRetainTaskState="true"
+                android:configChanges="keyboardHidden|orientation"
+                android:label="AlarmTest"
+                android:launchMode="singleTask"
+                android:name=".AlarmtestActivity" android:theme="@style/Theme.Titanium"&gt;
+                &lt;intent-filter&gt;
+                    &lt;action android:name="android.intent.action.MAIN"/&gt;
+                    &lt;category android:name="android.intent.category.LAUNCHER"/&gt;
+                &lt;/intent-filter&gt;
+            &lt;/activity&gt;
+             &lt;receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"&gt;&lt;/receiver&gt;
+             &lt;receiver android:name="bencoding.alarmmanager.AlarmServiceListener"&gt;&lt;/receiver&gt;  
+        &lt;/application&gt;
+    &lt;/manifest&gt;
+    &lt;services&gt;
+        &lt;service type="interval" url="testservice.js"/&gt;
+    &lt;/services&gt;
+&lt;/android&gt;
+</code></pre>
+
+<h3>What happens to my alarms when the user uninstalls the app?</h3>
+
+<p>Android removes your alarms when the user uninstalls your app.</p>
+
+<h2>Licensing &amp; Support</h2>
+
+<p>This project is licensed under the OSI approved Apache Public License (version 2). For details please see the license associated with each project.</p>
+
+<p>Developed by <a href="http://bahrenburgs.com">Ben Bahrenburg</a> available on twitter <a href="http://twitter.com/benCoding">@benCoding</a></p>
+
+<h2>Learn More</h2>
+
+<h3>Twitter</h3>
+
+<p>Please consider following the <a href="http://www.twitter.com/benCoding">@benCoding Twitter</a> for updates 
+and more about Titanium.</p>
+
+<h3>Blog</h3>
+
+<p>For module updates, Titanium tutorials and more please check out my blog at <a href="http://benCoding.com">benCoding.Com</a>. </p>

@@ -14,6 +14,7 @@ var btn1 = Ti.UI.createButton({
 win.add(btn1);
 btn1.addEventListener('click',function(e){
 	alarmManager.addAlarmNotification({
+		icon: Ti.Android.R.drawable.stat_notify_sync, //Optional icon must be a resource id or url
 		minute:2, //Set the number of minutes until the alarm should go off
 		contentTitle:'Alarm #1', //Set the title of the Notification that will appear
 		contentText:'Alarm & Notify Basic' //Set the body of the notification that will apear
@@ -96,7 +97,7 @@ win.add(btn5);
 btn5.addEventListener('click',function(e){
 	alarmManager.addAlarmService({
 		//The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
-		service_name:'com.appworkbench.alarmtest.TestserviceService', 		
+		service:'com.appworkbench.alarmtest.TestserviceService', 		
 		minute:2 //Set the number of minutes until the alarm should go off
 	});	
 	var ew = Ti.UI.createAlertDialog({
@@ -113,7 +114,7 @@ win.add(btn6);
 btn6.addEventListener('click',function(e){
 	alarmManager.addAlarmService({
 		//The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
-		service_name:'com.appworkbench.alarmtest.TestserviceService', 
+		service:'com.appworkbench.alarmtest.TestserviceService', 
 		minute:2, //Set the number of minutes until the alarm should go off
 		repeat:60000 //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
 		//Or as shown above you can provide the millesecond value 
@@ -133,7 +134,7 @@ btn7.addEventListener('click',function(e){
 	var now = new Date();
 	alarmManager.addAlarmService({		
 		//The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
-		service_name:'com.appworkbench.alarmtest.TestserviceService', 		
+		service:'com.appworkbench.alarmtest.TestserviceService', 		
 		year: now.getFullYear(),
 		month: now.getMonth(),
 		day: now.getDate(),
@@ -155,7 +156,7 @@ btn8.addEventListener('click',function(e){
 	var now = new Date();
 	alarmManager.addAlarmService({	
 		//The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
-		service_name:'com.appworkbench.alarmtest.TestserviceService', 			
+		service:'com.appworkbench.alarmtest.TestserviceService', 			
 		year: now.getFullYear(),
 		month: now.getMonth(),
 		day: now.getDate(),
@@ -176,7 +177,6 @@ var btn9 = Ti.UI.createButton({
 });
 win.add(btn9);
 btn9.addEventListener('click',function(e){
-	var now = new Date();
 	alarmManager.cancelAlarmNotification();	
 	var ew = Ti.UI.createAlertDialog({
 		title:'Info', message:"Your alarm notification has been cancelled",
@@ -190,7 +190,6 @@ var btn10 = Ti.UI.createButton({
 });
 win.add(btn10);
 btn10.addEventListener('click',function(e){
-	var now = new Date();
 	alarmManager.cancelAlarmService();	
 	var ew = Ti.UI.createAlertDialog({
 		title:'Info', message:"Your alarm service has been cancelled",

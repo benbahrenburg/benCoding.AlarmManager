@@ -180,7 +180,7 @@ public class AlarmManagerProxy extends KrollProxy {
 	}
 
 	private Intent createAlarmServiceIntent(KrollDict args){
-		String serviceName = args.getString("service_name");
+		String serviceName = args.getString("service");
 		Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(), AlarmServiceListener.class);
 		intent.putExtra("alarm_service_name", serviceName);
 		return intent;
@@ -203,8 +203,8 @@ public class AlarmManagerProxy extends KrollProxy {
 		utils.msgLogger(LCAT,"Creating Alarm Service Request",FORCE_LOG);		
 		@SuppressWarnings("unchecked")
 		KrollDict args = new KrollDict(hm);
-		if(!args.containsKeyAndNotNull("service_name")){
-			throw new IllegalArgumentException("Service name (service_name) is required");
+		if(!args.containsKeyAndNotNull("service")){
+			throw new IllegalArgumentException("Service name (service) is required");
 		}
 		if(!args.containsKeyAndNotNull("minute")){
 			throw new IllegalArgumentException("The minute field is required");
