@@ -2,18 +2,22 @@
 
 The benCoding.AlarmManager module enables you to use the native Android AlarmManager in your Titanium apps to schedule notifications and services.
 
-This project can be found on github at https://github.com/benbahrenburg/benCoding.AlarmManager
+This project can be found on github at [https://github.com/benbahrenburg/benCoding.AlarmManager](https://github.com/benbahrenburg/benCoding.AlarmManager)
 
 <h2>Before you start</h2>
 * This is an Android module designed to work with Titanium SDK 1.8.2 or greater.
 * Before using this module you first need to install the package. If you need instructions on how to install a 3rd party module please read this installation guide.
 
 <h2>What is in the repo?</h2>
+* Module
+	The Module folder contains the benCoding.AlarmManager project.  To get the compiled module you will want to go [here.](https://github.com/benbahrenburg/benCoding.AlarmManager/tree/master/Module/dist)
 
+* ExampleProject
+	The ExampleProject folder contains a full example project.  Since this module uses services and activities it is important that you review this example before using in your app.
 
 <h2>Download the release</h2>
 
-To get the module, go to the Module/dist folder. This will have a release compiled for anyone download it from github.
+To get the module, go to the [Module/dist](https://github.com/benbahrenburg/benCoding.AlarmManager/tree/master/Module/dist) folder. This will have a release compiled for anyone download it from github.
 
 <h2>Building from source?</h2>
 
