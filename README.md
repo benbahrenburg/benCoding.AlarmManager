@@ -42,10 +42,10 @@ For a detailed example on how to use this module, please download the example pr
 Android Alarm's work using BroadcastReceivers.  In order to have your Titanium project subscribe to the Alarms it generates you need to add the receivers into your tiapp.xml file.
 
 The benCoding.AlarmManager uses two receivers. One for each kind of Alarm you can schedule.  See below for the example.
-<pre><code>
+
+
 	<receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"></receiver>
     <receiver android:name="bencoding.alarmmanager.AlarmServiceListener"></receiver> 
-</code></pre>
 
 Given all of the different configuration options needed, I highly recommend starting with the ExampleProject before incorporating into another project.
 
@@ -218,8 +218,6 @@ Please make sure you have the correct receiver entries setup in your tiapp.xml f
 <h3>Why does it restart my app when I click on the notification?</h3>
 You need to make sure you have the singleTask launchMode set in your tiapp.xml file.  See below for a snippet and the ExampleProject for an full example.
 
-<pre><code>
-
     <android xmlns:android="http://schemas.android.com/apk/res/android">
         <manifest>
             <supports-screens android:anyDensity="false"/>
@@ -242,8 +240,7 @@ You need to make sure you have the singleTask launchMode set in your tiapp.xml f
             <service type="interval" url="testservice.js"/>
         </services>
     </android>
-    
-</code></pre>
+
 
 <h3>What happens to my alarms when the user uninstalls the app?</h3>
 Android removes your alarms when the user uninstalls your app.
