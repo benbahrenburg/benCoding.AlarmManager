@@ -10,10 +10,12 @@ This project can be found on github at [https://github.com/benbahrenburg/benCodi
 
 <h2>What is in the repo?</h2>
 * Module
-	The Module folder contains the benCoding.AlarmManager project.  To get the compiled module you will want to go [here.](https://github.com/benbahrenburg/benCoding.AlarmManager/tree/master/Module/dist)
+
+The Module folder contains the benCoding.AlarmManager project.  To get the compiled module you will want to go [here.](https://github.com/benbahrenburg/benCoding.AlarmManager/tree/master/Module/dist)
 
 * ExampleProject
-	The ExampleProject folder contains a full example project.  Since this module uses services and activities it is important that you review this example before using in your app.
+
+The ExampleProject folder contains a full example project.  Since this module uses services and activities it is important that you review this example before using in your app.
 
 <h2>Download the release</h2>
 
