@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>2.1.0.v20120404</sdk-version>
+    <sdk-version>2.1.0.v20120413</sdk-version>
     <id>com.appworkbench.alarmtest</id>
     <name>AlarmTest</name>
     <version>1.0</version>
@@ -26,7 +26,7 @@
     <guid>6867e4bc-b8f8-4a39-9a30-5ae943026d79</guid>
     <property name="ti.android.compilejs" type="bool">false</property>
     <property name="ti.android.debug" type="bool">true</property>
-    <property name="ti.android.fastdev" type="bool">false</property>    
+    <property name="ti.android.fastdev" type="bool">false</property>
     <property name="ti.ui.defaultunit">system</property>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
         <manifest>
@@ -35,15 +35,15 @@
                 <activity android:alwaysRetainTaskState="true"
                     android:configChanges="keyboardHidden|orientation"
                     android:label="AlarmTest"
-                    android:launchMode="singleTask"
+                    android:launchMode="singleTop"
                     android:name=".AlarmtestActivity" android:theme="@style/Theme.Titanium">
                     <intent-filter>
                         <action android:name="android.intent.action.MAIN"/>
                         <category android:name="android.intent.category.LAUNCHER"/>
                     </intent-filter>
                 </activity>
-                 <receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"></receiver>
-                 <receiver android:name="bencoding.alarmmanager.AlarmServiceListener"></receiver>  
+                <receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"/>
+                <receiver android:name="bencoding.alarmmanager.AlarmServiceListener"/>
             </application>
         </manifest>
         <services>

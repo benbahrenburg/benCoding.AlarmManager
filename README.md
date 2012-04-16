@@ -128,7 +128,7 @@ var now = new Date();
 
 //Set an Alarm to publish a notification in about two minutes
 alarmManager.addAlarmNotification({
-    icon: Ti.Android.R.drawable.stat_notify_sync, //Optional icon must be a resource id or url
+    icon: Ti.Android.R.drawable.star_on, //Optional icon must be a resource id or url
 	minute:2, //Set the number of minutes until the alarm should go off
 	contentTitle:'Alarm #2', //Set the title of the Notification that will appear
 	contentText:'Alarm & Notify Basic Repeat' //Set the body of the notification that will apear
@@ -222,7 +222,7 @@ No, it is not recommended that you mix alarms and interval services.  If this is
 Please make sure you have the correct receiver entries setup in your tiapp.xml file.  See the ExampleProject for details. Additionally after adding the receiver entries you will need to clean your project and relaunch the emulator.
 
 <h3>Why does it restart my app when I click on the notification?</h3>
-You need to make sure you have the singleTask launchMode set in your tiapp.xml file.  See below for a snippet and the ExampleProject for an full example.
+You need to make sure you have the singleTop launchMode set in your tiapp.xml file.  See below for a snippet and the ExampleProject for an full example.
 
     <android xmlns:android="http://schemas.android.com/apk/res/android">
         <manifest>
@@ -231,7 +231,7 @@ You need to make sure you have the singleTask launchMode set in your tiapp.xml f
                 <activity android:alwaysRetainTaskState="true"
                     android:configChanges="keyboardHidden|orientation"
                     android:label="AlarmTest"
-                    android:launchMode="singleTask"
+                    android:launchMode="singleTop"
                     android:name=".AlarmtestActivity" android:theme="@style/Theme.Titanium">
                     <intent-filter>
                         <action android:name="android.intent.action.MAIN"/>
