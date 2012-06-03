@@ -52,6 +52,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	Notification notification = new Notification(contentIcon, contentTitle, System.currentTimeMillis());		 
     	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
     	notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_AUTO_CANCEL;
+    	notification.defaults = Notification.DEFAULT_SOUND;
     	//notification.setLatestEventInfo(TiApplication.getInstance().getRootOrCurrentActivity(), contentTitle,contentText, sender);
     	notification.setLatestEventInfo(TiApplication.getInstance().getApplicationContext(), contentTitle,contentText, sender);
     	utils.msgLogger(LCAT,"Notifying");        
