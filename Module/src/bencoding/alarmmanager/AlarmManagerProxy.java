@@ -23,6 +23,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 
 import android.content.Intent;
+import android.text.format.DateUtils;
+import android.text.format.Time;
 
 @Kroll.proxy(creatableInModule=AlarmmanagerModule.class)
 public class AlarmManagerProxy extends KrollProxy {
@@ -227,8 +229,9 @@ public class AlarmManagerProxy extends KrollProxy {
 		Intent intent = createAlarmServiceIntent(args);
 		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), 192837, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		if(isRepeating){
-			utils.msgLogger(LCAT, "Setting Alarm to repeat");
-			am.setRepeating(AlarmManager.ELAPSED_REALTIME,calendar.getTimeInMillis(), repeatingFrequency, sender);
+			utils.msgLogger(LCAT, "Setting Alarm to repeat at frequency " + repeatingFrequency);
+		    PendingIntent pendingIntent = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
+		    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), repeatingFrequency, pendingIntent);
 		}else{
 			utils.msgLogger(LCAT, "Setting Alarm for a single run");
 			am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);

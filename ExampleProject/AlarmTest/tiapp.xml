@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>2.1.0.v20120413</sdk-version>
+    <sdk-version>2.0.2.GA</sdk-version>
     <id>com.appworkbench.alarmtest</id>
     <name>AlarmTest</name>
     <version>1.0</version>
@@ -51,6 +51,6 @@
         </services>
     </android>
     <modules>
-        <plugin platform="android" version="0.1">bencoding.alarmmanager</plugin>
+        <plugin platform="android" version="0.3">bencoding.alarmmanager</plugin>
     </modules>
 </ti:app>
