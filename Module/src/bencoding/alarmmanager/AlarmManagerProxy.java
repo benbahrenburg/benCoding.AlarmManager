@@ -23,8 +23,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 
 import android.content.Intent;
-import android.text.format.DateUtils;
-import android.text.format.Time;
 
 @Kroll.proxy(creatableInModule=AlarmmanagerModule.class)
 public class AlarmManagerProxy extends KrollProxy {
@@ -58,6 +56,10 @@ public class AlarmManagerProxy extends KrollProxy {
 		int notificationIcon = 0;
 		String contentTitle = "";
 		String contentText = "";
+		boolean playSound = optionIsEnabled(args,"playSound");
+		boolean doVibrate = optionIsEnabled(args,"vibrate");
+		boolean showLights = optionIsEnabled(args,"showLights");
+		
 		if (args.containsKeyAndNotNull(TiC.PROPERTY_CONTENT_TITLE)
 				|| args.containsKeyAndNotNull(TiC.PROPERTY_CONTENT_TEXT))
 			{
@@ -89,6 +91,9 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_msg", contentText);
 		intent.putExtra("notification_has_icon", (notificationIcon!=0));
 		intent.putExtra("notification_icon", notificationIcon);
+		intent.putExtra("notification_play_sound", playSound);		
+		intent.putExtra("notification_vibrate", doVibrate);
+		intent.putExtra("notification_show_lights", showLights);
 		return intent;
 	}
 	
@@ -105,7 +110,14 @@ public class AlarmManagerProxy extends KrollProxy {
 		am.cancel(sender);	
 		utils.msgLogger(LCAT, "Alarm Notification Canceled",FORCE_LOG);
 	}
-	
+	private boolean optionIsEnabled(KrollDict args,String paramName){		
+		if (args.containsKeyAndNotNull(paramName)){
+			Object value = args.get(paramName);
+			return TiConvert.toBoolean(value);
+		}else{
+			return false;
+		}
+	}
 	private boolean hasRepeating(KrollDict args){
 		boolean results = (args.containsKeyAndNotNull("repeat"));
 		utils.msgLogger(LCAT, "Repeat Frequency enabled: " + results);
@@ -185,6 +197,23 @@ public class AlarmManagerProxy extends KrollProxy {
 		String serviceName = args.getString("service");
 		Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(), AlarmServiceListener.class);
 		intent.putExtra("alarm_service_name", serviceName);
+		//Pass in flag if we need to restart the servie on each call
+		intent.putExtra("alarm_service_force_restart", (optionIsEnabled(args,"forceRestart")));
+		//Check if the user has seleced to use intervals
+		boolean hasInterval = (args.containsKeyAndNotNull("interval"));
+		long intervalValue = 0;
+		if(hasInterval){
+			Object interval = args.get("interval");
+			if (interval instanceof Number) {
+				intervalValue = ((Number)interval).longValue();
+			}else{
+				hasInterval=false;
+			}
+		}
+		intent.putExtra("alarm_service_has_interval", hasInterval);
+		if(hasInterval){
+			intent.putExtra("alarm_service_interval", intervalValue);
+		}
 		return intent;
 	}
 	@Kroll.method
@@ -217,6 +246,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		if(isRepeating){
 			repeatingFrequency=repeatingFrequency(args);
 		}		
+		
 		//If minutes are provided by not years, we just take the minutes to mean to add minutes until fire
 		boolean minuteBased = (args.containsKeyAndNotNull("minute") && !args.containsKeyAndNotNull("year"));
 		//Based on what kind of duration we build our calendar

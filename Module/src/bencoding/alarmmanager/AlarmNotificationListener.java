@@ -39,11 +39,19 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         }else{
         	utils.msgLogger(LCAT,"No icon provided, default will be used");
         }
+        //Add default notification flags
+        boolean playSound =  bundle.getBoolean("notification_play_sound",false);
+        utils.msgLogger(LCAT,"On notification play sound? " + new Boolean(playSound).toString());
+        boolean doVibrate =  bundle.getBoolean("notification_vibrate",false);
+        utils.msgLogger(LCAT,"On notification vibrate? " + new Boolean(doVibrate).toString());
+        boolean showLights =  bundle.getBoolean("notification_show_lights",false);
+        utils.msgLogger(LCAT,"On notification show lights? " + new Boolean(showLights).toString());
+        
     	mNotificationManager =(NotificationManager) TiApplication.getInstance().getSystemService(TiApplication.NOTIFICATION_SERVICE);
     	utils.msgLogger(LCAT,"NotificationManager created");
-    	showNotification(TiApplication.getInstance().getApplicationContext(),contentTitle,contentText,icon); 	
+    	showNotification(TiApplication.getInstance().getApplicationContext(),contentTitle,contentText,icon,playSound,doVibrate,showLights); 	
     }
-    private void showNotification(Context context, String contentTitle, String contentText, int contentIcon) {
+    private void showNotification(Context context, String contentTitle, String contentText, int contentIcon, boolean playSound, boolean doVibrate, boolean showLights) {
     	utils.msgLogger(LCAT,"Building Notification");  
     	// MAKE SURE YOU HAVE android:launchMode="singleTask" SET IN YOUR TIAPP.XML FILE
     	// IF YOU DON'T HAVE THIS, IT WILL RESTART YOUR APP
@@ -51,7 +59,20 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(),TiApplication.getInstance().getRootOrCurrentActivity().getClass());    	
     	Notification notification = new Notification(contentIcon, contentTitle, System.currentTimeMillis());		 
     	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
+    	
+    	//Set the notifications flags
+    	if(playSound){
+    		notification.defaults |= Notification.DEFAULT_SOUND;
+    	}
+    	if(doVibrate){
+    		notification.defaults |=Notification.DEFAULT_VIBRATE;
+    	}
+    	if(showLights){
+    		notification.defaults |=Notification.DEFAULT_LIGHTS;
+    	}
+    	//Set alarm flags
     	notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_AUTO_CANCEL;
+    	
     	//notification.setLatestEventInfo(TiApplication.getInstance().getRootOrCurrentActivity(), contentTitle,contentText, sender);
     	notification.setLatestEventInfo(TiApplication.getInstance().getApplicationContext(), contentTitle,contentText, sender);
     	utils.msgLogger(LCAT,"Notifying");        

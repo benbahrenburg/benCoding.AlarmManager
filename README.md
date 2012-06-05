@@ -71,6 +71,9 @@ You can create an AlarmNotification using the below properties:
 * <b>year</b> - (Optional) The year you want to start the alarm
 * <b>contentTitle</b> - (Required) The title of the notification
 * <b>contentText</b> - (Required) The text of the notification
+* <b>playSound</b> (Optional) Play the default notification sound when alarm triggered. 
+* <b>vibrate</b> (Optional) Vibrate the device on notification. Please note this requires the vibrate permission.
+* <b>showLights</b> (Optional) Activate notification lights on device when alarm triggered.
 * <b>icon</b> - (Optional)The icon of the notification
 * <b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.
 
@@ -97,6 +100,8 @@ You can create an AlarmService using the below properties:
 * <b>day</b> - (Optional) The day you want to start the alarm
 * <b>month</b> - (Optional) The month you want to start the alarm
 * <b>year</b> - (Optional) The year you want to start the alarm
+* <b>interval</b> - (Optional) The value used to create an interval service. This value must be in milliseconds.
+* <b>forceRestart</b> - (Optional) Force the service to restart if it is already running.
 * <b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.
 
 Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from today and add the number of minutes provided.

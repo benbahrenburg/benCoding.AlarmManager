@@ -51,6 +51,6 @@
         </services>
     </android>
     <modules>
-        <plugin platform="android" version="0.3">bencoding.alarmmanager</plugin>
+        <plugin platform="android" version="0.4">bencoding.alarmmanager</plugin>
     </modules>
 </ti:app>

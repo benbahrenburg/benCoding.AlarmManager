@@ -1,9 +1,15 @@
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 Ti.UI.setBackgroundColor('#000');
+//Add this in so Titanium will add the permission for us.
+Titanium.Media.vibrate();
+//Add this so Titanium will add the permissions and links needed to play sounds
+var sound = Titanium.Media.createSound();
 
+//Bring in the module
 var alarmModule = require('bencoding.alarmmanager');
+//Create a new instance of the Alarm Manager
 var alarmManager = alarmModule.createAlarmManager();
-
+//Create our basic window to put our example buttons on
 var win = Titanium.UI.createWindow({  
     title:'Tab 1', backgroundColor:'#fff', title:'Alarm Manager Tests'
 });
@@ -17,7 +23,10 @@ btn1.addEventListener('click',function(e){
 		icon: Ti.Android.R.drawable.star_on, //Optional icon must be a resource id or url
 		minute:2, //Set the number of minutes until the alarm should go off
 		contentTitle:'Alarm #1', //Set the title of the Notification that will appear
-		contentText:'Alarm & Notify Basic' //Set the body of the notification that will apear
+		contentText:'Alarm & Notify Basic', //Set the body of the notification that will apear
+		playSound:true, //On notification play the default sound ( by default off )
+		vibrate:true, //On notification vibrate device ( by default off )
+		showLights: true, //On notification show the device lights ( by default off )
 	});	
 	var ew = Ti.UI.createAlertDialog({
 		title:'Info', message:"You should see your alarm notification in about 2 minutes",
@@ -98,7 +107,8 @@ btn5.addEventListener('click',function(e){
 	alarmManager.addAlarmService({
 		//The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
 		service:'com.appworkbench.alarmtest.TestserviceService', 		
-		minute:2 //Set the number of minutes until the alarm should go off
+		minute:2, //Set the number of minutes until the alarm should go off
+		interval:60000 // Create an interval service that runs each minute
 	});	
 	var ew = Ti.UI.createAlertDialog({
 		title:'Info', message:"The Service provided will be started in about 2 minutes",
@@ -116,8 +126,9 @@ btn6.addEventListener('click',function(e){
 		//The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
 		service:'com.appworkbench.alarmtest.TestserviceService', 
 		minute:2, //Set the number of minutes until the alarm should go off
-		repeat:60000 //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
-		//Or as shown above you can provide the millesecond value 
+		repeat:60000, //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
+					 //Or as shown above you can provide the millesecond value 
+		forceRestart:true //Force the service to restart on each call.
 	});	
 	var ew = Ti.UI.createAlertDialog({
 		title:'Info', message:"The Service provided will be started in about 2 minutes & repeat each minute",
