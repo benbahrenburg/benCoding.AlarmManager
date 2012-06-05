@@ -30,7 +30,7 @@ If you are building from source you will need to do the following:
 <h2>Setup</h2>
 
 * Download the latest release from the releases folder ( or you can build it yourself )
-* Install the bencoding.sms module. If you need help here is a "How To" [guide](https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules). 
+* Install the bencoding.alarmmanager module. If you need help here is a "How To" [guide](https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules). 
 * You can now use the module via the commonJS require method, example shown below.
 * You will also need to add the receivers into your tiapp.xml file.
 
@@ -219,9 +219,6 @@ Android handles the cancel action at a PendingIntent level.  This means that whe
 
 <h3>Can I use my own Notification icons?</h3>
 Yes but the URL must be an image located in Resources/android/images/ or an Android content URI.
-
-<h3>Can I schedule an interval service?</h3>
-No, it is not recommended that you mix alarms and interval services.  If this is needed, you can schedule a service to create an interval service. But, I would caution against mixing repeating service types.
 
 <h3>My project isn't receiving alarm</h3>
 Please make sure you have the correct receiver entries setup in your tiapp.xml file.  See the ExampleProject for details. Additionally after adding the receiver entries you will need to clean your project and relaunch the emulator.

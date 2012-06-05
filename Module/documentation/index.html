@@ -39,7 +39,7 @@
 
 <ul>
 <li>Download the latest release from the releases folder ( or you can build it yourself )</li>
-<li>Install the bencoding.sms module. If you need help here is a "How To" <a href="https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules">guide</a>. </li>
+<li>Install the bencoding.AlarmManager module. If you need help here is a "How To" <a href="https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules">guide</a>. </li>
 <li>You can now use the module via the commonJS require method, example shown below.</li>
 <li>You will also need to add the receivers into your tiapp.xml file.</li>
 </ul>
@@ -242,10 +242,6 @@ ew10.show();
 <h3>Can I use my own Notification icons?</h3>
 
 <p>Yes but the URL must be an image located in Resources/android/images/ or an Android content URI.</p>
-
-<h3>Can I schedule an interval service?</h3>
-
-<p>No, it is not recommended that you mix alarms and interval services.  If this is needed, you can schedule a service to create an interval service. But, I would caution against mixing repeating service types.</p>
 
 <h3>My project isn't receiving alarm</h3>
 

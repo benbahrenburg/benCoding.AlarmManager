@@ -30,21 +30,6 @@ public class AlarmProxy extends KrollProxy {
 		super();
 	}
 	
-	@Kroll.method
-	public void addAlarm(Object[] args){
-		
-		Log.d(LCAT, "Start creating Alarm");		
-		
-		AlarmManager am = (AlarmManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.ALARM_SERVICE);
-		 Calendar cal = Calendar.getInstance();
-		 cal.add(Calendar.MINUTE, 3);
-		 Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(), AlarmNotificationListener.class);
-		 //intent.putExtra("alarm_message", "O'Doyle Rules!");
-		 PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), 192837, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
-		 am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);		
-		 Log.d(LCAT, "Alarm Created");	
-		 
-	}
 	@SuppressWarnings("unchecked")
 	@Kroll.method
 	public void addAlarmService(@SuppressWarnings("rawtypes") HashMap hm){
