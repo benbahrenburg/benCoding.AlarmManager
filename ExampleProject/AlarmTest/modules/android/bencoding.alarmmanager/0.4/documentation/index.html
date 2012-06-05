@@ -14,11 +14,16 @@
 <h2>What is in the repo?</h2>
 
 <ul>
-<li><p>Module
-The Module folder contains the benCoding.AlarmManager project.  To get the compiled module you will want to go <a href="https://github.com/benbahrenburg/benCoding.AlarmManager/tree/master/Module/dist">here.</a></p></li>
-<li><p>ExampleProject
-The ExampleProject folder contains a full example project.  Since this module uses services and activities it is important that you review this example before using in your app.</p></li>
+<li>Module</li>
 </ul>
+
+<p>The Module folder contains the benCoding.AlarmManager project.  To get the compiled module you will want to go <a href="https://github.com/benbahrenburg/benCoding.AlarmManager/tree/master/Module/dist">here.</a></p>
+
+<ul>
+<li>ExampleProject</li>
+</ul>
+
+<p>The ExampleProject folder contains a full example project.  Since this module uses services and activities it is important that you review this example before using in your app.</p>
 
 <h2>Download the release</h2>
 
@@ -79,6 +84,9 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 <li><b>year</b> - (Optional) The year you want to start the alarm</li>
 <li><b>contentTitle</b> - (Required) The title of the notification</li>
 <li><b>contentText</b> - (Required) The text of the notification</li>
+<li><b>playSound</b> (Optional) Play the default notification sound when alarm triggered. </li>
+<li><b>vibrate</b> (Optional) Vibrate the device on notification. Please note this requires the vibrate permission.</li>
+<li><b>showLights</b> (Optional) Activate notification lights on device when alarm triggered.</li>
 <li><b>icon</b> - (Optional)The icon of the notification</li>
 <li><b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.</li>
 </ul>
@@ -108,6 +116,8 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 <li><b>day</b> - (Optional) The day you want to start the alarm</li>
 <li><b>month</b> - (Optional) The month you want to start the alarm</li>
 <li><b>year</b> - (Optional) The year you want to start the alarm</li>
+<li><b>interval</b> - (Optional) The value used to create an interval service. This value must be in milliseconds.</li>
+<li><b>forceRestart</b> - (Optional) Force the service to restart if it is already running.</li>
 <li><b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.</li>
 </ul>
 
@@ -146,10 +156,10 @@ alarmManager.addAlarmNotification({
     icon: Ti.Android.R.drawable.star_on, //Optional icon must be a resource id or url
     minute:2, //Set the number of minutes until the alarm should go off
     contentTitle:'Alarm #2', //Set the title of the Notification that will appear
-    contentText:'Alarm &amp; Notify Basic Repeat' //Set the body of the notification that will apear
+    contentText:'Alarm & Notify Basic Repeat' //Set the body of the notification that will apear
 });    
 var ew1 = Ti.UI.createAlertDialog({
-    title:'Info', message:"You should see your alarm notification in about 2 minutes &amp; repeat each minute",
+    title:'Info', message:"You should see your alarm notification in about 2 minutes & repeat each minute",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
 ew1.show();
@@ -163,7 +173,7 @@ alarmManager.addAlarmNotification({
     hour: now.getHours(),
     minute: now.getMinutes() + 2, //Set the number of minutes until the alarm should go off
     contentTitle:'Alarm #3', //Set the title of the Notification that will appear
-    contentText:'Alarm &amp; Notify Scheduled', //Set the body of the notification that will apear
+    contentText:'Alarm & Notify Scheduled', //Set the body of the notification that will apear
     repeat:60000 //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
     //Or as shown above you can provide the millesecond value   
 });    
@@ -171,7 +181,7 @@ var ew2 = Ti.UI.createAlertDialog({
     title:'Info', message:"You should see your alarm notification in about 2 minutes",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
- ew2.show();
+ ew2.show();    
 
 //Cancel our Notification based Alarms 
 alarmManager.cancelAlarmNotification();    
@@ -179,7 +189,7 @@ var ew9 = Ti.UI.createAlertDialog({
     title:'Info', message:"Your alarm notification has been cancelled",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
-ew9.show();
+ew9.show();    
 
 //Schedule a service to be run (once) in about two minutes    
 alarmManager.addAlarmService({
@@ -191,7 +201,7 @@ var ew5 = Ti.UI.createAlertDialog({
     title:'Info', message:"The Service provided will be started in about 2 minutes",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
-ew5.show();
+ew5.show();    
 
 //Schedule a service to be run (once) in about two minutes, then to run at the same time each day
 alarmManager.addAlarmService({    
@@ -205,17 +215,17 @@ alarmManager.addAlarmService({
     repeat:'daily' //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
 });    
 var ew8 = Ti.UI.createAlertDialog({
-    title:'Info', message:"You should see your alarm notification in about 2 minutes &amp; repeat each day",
+    title:'Info', message:"You should see your alarm notification in about 2 minutes & repeat each day",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
-ew8.show();
+ew8.show();    
 
 alarmManager.cancelAlarmService();    
 var ew10 = Ti.UI.createAlertDialog({
     title:'Info', message:"Your alarm service has been cancelled",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
-ew10.show();
+ew10.show();    
 
 </code></pre>
 
@@ -273,7 +283,7 @@ ew10.show();
 
 <p>Android removes your alarms when the user uninstalls your app.</p>
 
-<h2>Licensing &amp; Support</h2>
+<h2>Licensing & Support</h2>
 
 <p>This project is licensed under the OSI approved Apache Public License (version 2). For details please see the license associated with each project.</p>
 
