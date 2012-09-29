@@ -6,13 +6,12 @@ This project can be found on github at [https://github.com/benbahrenburg/benCodi
 
 <h2>Before you start</h2>
 * This is an Android module designed to work with Titanium SDK 1.8.2 or greater.
-* Before using this module you first need to install the package. If you need instructions on how to install a 3rd party module please read this installation guide.
+* Before getting start please note you need to compile this module yourself
 
 <h2>What is in the repo?</h2>
 * Module
 
-The Module folder contains the benCoding.AlarmManager project.  To get the compiled module you will want to go [here.](https://github.com/benbahrenburg/benCoding.AlarmManager/tree/master/Module/dist)
-
+The Module folder contains the benCoding.AlarmManager project. 
 * ExampleProject
 
 The ExampleProject folder contains a full example project.  Since this module uses services and activities it is important that you review this example before using in your app.
@@ -24,8 +23,7 @@ If you are building from source you will need to do the following:
 * Update the build.properties to have the correct paths for your environment
 
 <h2>Setup</h2>
-
-* Download the latest release from the releases folder ( or you can build it yourself )
+* Compile the module
 * Install the bencoding.alarmmanager module. If you need help here is a "How To" [guide](https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules). 
 * You can now use the module via the commonJS require method, example shown below.
 * You will also need to add the receivers into your tiapp.xml file.
