@@ -17,11 +17,7 @@ The Module folder contains the benCoding.AlarmManager project.  To get the compi
 
 The ExampleProject folder contains a full example project.  Since this module uses services and activities it is important that you review this example before using in your app.
 
-<h2>Download the release</h2>
-
-To get the module, go to the [Module/dist](https://github.com/benbahrenburg/benCoding.AlarmManager/tree/master/Module/dist) folder. This will have a release compiled for anyone download it from github.
-
-<h2>Building from source?</h2>
+<h2>Building from source</h2>
 
 If you are building from source you will need to do the following:
 * Update your .classpath file fit your environment
