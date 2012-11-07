@@ -8,6 +8,7 @@ package bencoding.alarmmanager;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import org.appcelerator.kroll.KrollDict;
@@ -33,12 +34,20 @@ public class AlarmManagerProxy extends KrollProxy {
 		super();
 	}
 
-	private Calendar getMinutedBasedCalendar(KrollDict args){
+	private Calendar getSecondBasedCalendar(KrollDict args){
+		int interval = args.getInt("second");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.SECOND, interval);
+		return cal;
+	}
+
+	private Calendar getMinuteBasedCalendar(KrollDict args){
 		int interval = args.getInt("minute");
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, interval);
 		return cal;
 	}
+
 	private Calendar getFullCalendar(KrollDict args){
 		Calendar defaultDay = Calendar.getInstance();
 		int day = args.optInt("day", defaultDay.get(Calendar.DAY_OF_MONTH));
@@ -46,9 +55,11 @@ public class AlarmManagerProxy extends KrollProxy {
 		int year = args.optInt("year", defaultDay.get(Calendar.YEAR));
 		int hour = args.optInt("hour", defaultDay.get(Calendar.HOUR_OF_DAY));
 		int minute = args.optInt("minute", defaultDay.get(Calendar.MINUTE));
+		int second = args.optInt("second", defaultDay.get(Calendar.SECOND));
 		Calendar cal =  new GregorianCalendar(year, month, day);
 		cal.add(Calendar.HOUR_OF_DAY, hour);
 		cal.add(Calendar.MINUTE, minute);
+		cal.add(Calendar.SECOND, second);
 		return cal;
 	}
 
@@ -70,6 +81,7 @@ public class AlarmManagerProxy extends KrollProxy {
 					contentText = TiConvert.toString(args, TiC.PROPERTY_CONTENT_TEXT);
 				};
 			}
+
 		if (args.containsKey(TiC.PROPERTY_ICON)) {
 			Object icon = args.get(TiC.PROPERTY_ICON);
 			if (icon instanceof Number) {
@@ -149,12 +161,11 @@ public class AlarmManagerProxy extends KrollProxy {
 		return freqResults;
 	}
 	@Kroll.method
-	public void addAlarmNotification(@SuppressWarnings("rawtypes") HashMap hm){		
-		utils.msgLogger(LCAT, "Creating Alarm Notification",FORCE_LOG);		
+	public void addAlarmNotification(@SuppressWarnings("rawtypes") HashMap hm){
 		@SuppressWarnings("unchecked")
 		KrollDict args = new KrollDict(hm);
-		if(!args.containsKeyAndNotNull("minute")){
-			throw new IllegalArgumentException("The minute field is required");
+		if(!args.containsKeyAndNotNull("minute") && !args.containsKeyAndNotNull("second")){
+			throw new IllegalArgumentException("The minute or second field is required");
 		}
 		if(!args.containsKeyAndNotNull(TiC.PROPERTY_CONTENT_TITLE)){
 			throw new IllegalArgumentException("The context title field (contentTitle) is required");
@@ -169,14 +180,28 @@ public class AlarmManagerProxy extends KrollProxy {
 			repeatingFrequency=repeatingFrequency(args);
 		}
 		
-		//If minutes are provided by not years, we just take the minutes to mean to add minutes until fire
+		//If seconds are provided but not years, we just take the seconds to mean to add seconds until fire
+		boolean secondBased = (args.containsKeyAndNotNull("second") && !args.containsKeyAndNotNull("year"));
+
+		//If minutes are provided but not years, we just take the minutes to mean to add minutes until fire
 		boolean minuteBased = (args.containsKeyAndNotNull("minute") && !args.containsKeyAndNotNull("year"));
+
 		//Based on what kind of duration we build our calendar
-		if(minuteBased){
-			calendar=getMinutedBasedCalendar(args);
-		}else{
+		if(secondBased) {
+			calendar=getSecondBasedCalendar(args);
+        }
+		else if(minuteBased) {
+			calendar=getMinuteBasedCalendar(args);
+		}
+        else {
 			calendar=getFullCalendar(args);
 		}
+
+        String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+		utils.msgLogger(LCAT, "Creating Alarm Notification for: " 
+            + sdf.format(calendar.getTime()), FORCE_LOG);
+
 		//Create the Alarm Manager
 		AlarmManager am = (AlarmManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.ALARM_SERVICE);
 		Intent intent = createAlarmNotifyIntent(args);
@@ -189,7 +214,7 @@ public class AlarmManagerProxy extends KrollProxy {
 			utils.msgLogger(LCAT, "Setting Alarm for a single run");
 			am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
 		}
-				
+
 		utils.msgLogger(LCAT, "Alarm Notification Created",FORCE_LOG);
 	}
 
@@ -214,6 +239,14 @@ public class AlarmManagerProxy extends KrollProxy {
 		if(hasInterval){
 			intent.putExtra("alarm_service_interval", intervalValue);
 		}
+
+		utils.msgLogger(LCAT, "created alarm service intent for " + serviceName
+            + "(forceRestart: " 
+            + (optionIsEnabled(args,"forceRestart") ? "true" : "false")
+            + ", intervalValue: " 
+            + intervalValue
+            + ")", FORCE_LOG);
+
 		return intent;
 	}
 	@Kroll.method
@@ -231,14 +264,13 @@ public class AlarmManagerProxy extends KrollProxy {
 	}
 	@Kroll.method
 	public void addAlarmService(@SuppressWarnings("rawtypes") HashMap hm){		
-		utils.msgLogger(LCAT,"Creating Alarm Service Request",FORCE_LOG);		
 		@SuppressWarnings("unchecked")
 		KrollDict args = new KrollDict(hm);
 		if(!args.containsKeyAndNotNull("service")){
 			throw new IllegalArgumentException("Service name (service) is required");
 		}
-		if(!args.containsKeyAndNotNull("minute")){
-			throw new IllegalArgumentException("The minute field is required");
+		if(!args.containsKeyAndNotNull("minute") && !args.containsKeyAndNotNull("second")){
+			throw new IllegalArgumentException("The minute or second field is required");
 		}		
 		Calendar calendar = null;
 		boolean isRepeating = hasRepeating(args);
@@ -247,14 +279,28 @@ public class AlarmManagerProxy extends KrollProxy {
 			repeatingFrequency=repeatingFrequency(args);
 		}		
 		
-		//If minutes are provided by not years, we just take the minutes to mean to add minutes until fire
+		//If seconds are provided but not years, we just take the seconds to mean to add seconds until fire
+		boolean secondBased = (args.containsKeyAndNotNull("second") && !args.containsKeyAndNotNull("year"));
+
+		//If minutes are provided but not years, we just take the minutes to mean to add minutes until fire
 		boolean minuteBased = (args.containsKeyAndNotNull("minute") && !args.containsKeyAndNotNull("year"));
+
 		//Based on what kind of duration we build our calendar
-		if(minuteBased){
-			calendar=getMinutedBasedCalendar(args);
-		}else{
+		if(secondBased) {
+			calendar=getSecondBasedCalendar(args);
+        }
+		else if(minuteBased) {
+			calendar=getMinuteBasedCalendar(args);
+		}
+        else {
 			calendar=getFullCalendar(args);
 		}
+
+        String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+		utils.msgLogger(LCAT, "Creating Alarm Notification for: " 
+            + sdf.format(calendar.getTime()), FORCE_LOG);
+
 		AlarmManager am = (AlarmManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.ALARM_SERVICE);
 		Intent intent = createAlarmServiceIntent(args);
 		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), 192837, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
@@ -262,6 +308,7 @@ public class AlarmManagerProxy extends KrollProxy {
 			utils.msgLogger(LCAT, "Setting Alarm to repeat at frequency " + repeatingFrequency);
 		    PendingIntent pendingIntent = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), repeatingFrequency, pendingIntent);
+
 		}else{
 			utils.msgLogger(LCAT, "Setting Alarm for a single run");
 			am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
