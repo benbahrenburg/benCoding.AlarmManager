@@ -77,6 +77,7 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 <p>You can create an AlarmNotification using the below properties:</p>
 
 <ul>
+<li><b>second</b> - (Required) The second of the start time. </li>
 <li><b>minute</b> - (Required) The minute of the start time. </li>
 <li><b>hour</b> - (Optional) The hour you want to start the alarm</li>
 <li><b>day</b> - (Optional) The day you want to start the alarm</li>
@@ -91,7 +92,7 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 <li><b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.</li>
 </ul>
 
-<p>Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from today and add the number of minutes provided.</p>
+<p>* Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from the current time.  If second is provided, alarm will be set to now plus the number of seconds provided; if minute is provided, alarm will be set for now plus the number of minutes provided.</p>
 
 <p>The valid repeat options are:
 * hourly
@@ -111,7 +112,8 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 
 <ul>
 <li><b>service</b> - (Required) The full service name from your AndroidManifest.xml to be run.</li>
-<li><b>minute</b> - (Required) The minute of the start time. </li>
+<li><b>second</b> - (Required *) The second of the start time. </li>
+<li><b>minute</b> - (Required *) The minute of the start time. </li>
 <li><b>hour</b> - (Optional) The hour you want to start the alarm</li>
 <li><b>day</b> - (Optional) The day you want to start the alarm</li>
 <li><b>month</b> - (Optional) The month you want to start the alarm</li>
@@ -121,7 +123,7 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 <li><b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.</li>
 </ul>
 
-<p>Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from today and add the number of minutes provided.</p>
+<p>* Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from the current time.  If second is provided, alarm will be set to now plus the number of seconds provided; if minute is provided, alarm will be set for now plus the number of minutes provided.</p>
 
 <p>The valid repeat options are:
 * hourly
