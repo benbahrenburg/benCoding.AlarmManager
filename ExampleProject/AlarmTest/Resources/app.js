@@ -20,6 +20,7 @@ var btn1 = Ti.UI.createButton({
 win.add(btn1);
 btn1.addEventListener('click',function(e){
 	alarmManager.addAlarmNotification({
+		requestCode: 41, //Request ID used to identify a specific alarm. Provide the same requestCode twice to update 
 		icon: Ti.Android.R.drawable.star_on, //Optional icon must be a resource id or url
 		minute:2, //Set the number of minutes until the alarm should go off
 		contentTitle:'Alarm #1', //Set the title of the Notification that will appear
@@ -41,6 +42,7 @@ var btn2 = Ti.UI.createButton({
 win.add(btn2);
 btn2.addEventListener('click',function(e){
 	alarmManager.addAlarmNotification({
+		requestCode: 42, //Request ID used to identify a specific alarm. Provide the same requestCode twice to update 
 		minute:2, //Set the number of minutes until the alarm should go off
 		contentTitle:'Alarm #2', //Set the title of the Notification that will appear
 		contentText:'Alarm & Notify Basic Repeat', //Set the body of the notification that will apear
@@ -60,7 +62,8 @@ var btn3 = Ti.UI.createButton({
 win.add(btn3);
 btn3.addEventListener('click',function(e){
 	var now = new Date();
-	alarmManager.addAlarmNotification({		
+	alarmManager.addAlarmNotification({	
+		requestCode: 43, //Request ID used to identify a specific alarm. Provide the same requestCode twice to update 	
 		year: now.getFullYear(),
 		month: now.getMonth(),
 		day: now.getDate(),
@@ -83,6 +86,7 @@ win.add(btn4);
 btn4.addEventListener('click',function(e){
 	var now = new Date();
 	alarmManager.addAlarmNotification({		
+		requestCode: 44, //Request ID used to identify a specific alarm. Provide the same requestCode twice to update 
 		year: now.getFullYear(),
 		month: now.getMonth(),
 		day: now.getDate(),
@@ -188,7 +192,8 @@ var btn9 = Ti.UI.createButton({
 });
 win.add(btn9);
 btn9.addEventListener('click',function(e){
-	alarmManager.cancelAlarmNotification();	
+	var requestCode = 41; //RequestCOde to be canceled
+	alarmManager.cancelAlarmNotification(requestCode);	
 	var ew = Ti.UI.createAlertDialog({
 		title:'Info', message:"Your alarm notification has been cancelled",
 		buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]

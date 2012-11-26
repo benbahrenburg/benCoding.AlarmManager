@@ -197,7 +197,7 @@ var ew2 = Ti.UI.createAlertDialog({
     title:'Info', message:"You should see your alarm notification in about 2 minutes",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
- ew2.show();    
+ ew2.show();
 
 //Cancel our Notification based Alarms 
 alarmManager.cancelAlarmNotification(requestCode);    
@@ -205,7 +205,7 @@ var ew9 = Ti.UI.createAlertDialog({
     title:'Info', message:"Your alarm notification has been cancelled",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
-ew9.show();    
+ew9.show();
 
 //Schedule a service to be run (once) in about two minutes    
 alarmManager.addAlarmService({
@@ -217,7 +217,7 @@ var ew5 = Ti.UI.createAlertDialog({
     title:'Info', message:"The Service provided will be started in about 2 minutes",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
-ew5.show();    
+ew5.show();
 
 //Schedule a service to be run (once) in about two minutes, then to run at the same time each day
 alarmManager.addAlarmService({    
@@ -234,14 +234,14 @@ var ew8 = Ti.UI.createAlertDialog({
     title:'Info', message:"You should see your alarm notification in about 2 minutes & repeat each day",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
-ew8.show();    
+ew8.show();
 
 alarmManager.cancelAlarmService();    
 var ew10 = Ti.UI.createAlertDialog({
     title:'Info', message:"Your alarm service has been cancelled",
     buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
 });
-ew10.show();    
+ew10.show();
 
 </code></pre>
 

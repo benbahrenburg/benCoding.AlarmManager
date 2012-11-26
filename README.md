@@ -57,21 +57,23 @@ You can reach more about BroadcastReceivers [here.](http://developer.android.com
 The addAlarmNotification allows you to schedule an Alarm that will then create an notification.
 
 You can create an AlarmNotification using the below properties:
+* <b>requestCode</b> (Optional) (int) ID for the specific alarm being created. If the requestCode, it will update the saved alarm
+* <b>second</b> - (Required) (int) The second of the start time. 
+* <b>minute</b> - (Required) (int) The minute of the start time. 
+* <b>hour</b> - (Optional) (int) The hour you want to start the alarm
+* <b>day</b> - (Optional) (int) The day you want to start the alarm
+* <b>month</b> - (Optional) (int) The month you want to start the alarm
+* <b>year</b> - (Optional) (int) The year you want to start the alarm
+* <b>contentTitle</b> - (Required) (string) The title of the notification
+* <b>contentText</b> - (Required) (string) The text of the notification
+* <b>playSound</b> (Optional) (bool) Play the default notification sound when alarm triggered. 
+* <b>vibrate</b> (Optional) (bool) Vibrate the device on notification. Please note this requires the vibrate permission.
+* <b>showLights</b> (Optional) (bool) Activate notification lights on device when alarm triggered.
+* <b>icon</b> - (Optional)The icon of the notification, this can be a system icon or resource included path
+* <b>repeat</b> - (Optional) (int) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.
 
-* <b>minute</b> - (Required) The minute of the start time. 
-* <b>hour</b> - (Optional) The hour you want to start the alarm
-* <b>day</b> - (Optional) The day you want to start the alarm
-* <b>month</b> - (Optional) The month you want to start the alarm
-* <b>year</b> - (Optional) The year you want to start the alarm
-* <b>contentTitle</b> - (Required) The title of the notification
-* <b>contentText</b> - (Required) The text of the notification
-* <b>playSound</b> (Optional) Play the default notification sound when alarm triggered. 
-* <b>vibrate</b> (Optional) Vibrate the device on notification. Please note this requires the vibrate permission.
-* <b>showLights</b> (Optional) Activate notification lights on device when alarm triggered.
-* <b>icon</b> - (Optional)The icon of the notification
-* <b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.
+Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from the current time If second is provided, alarm will be set to now plus the number of seconds provided; if minute is provided, alarm will be set for now plus the number of minutes provided.
 
-Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from today and add the number of minutes provided.
 
 The valid repeat options are:
 * hourly
@@ -89,11 +91,13 @@ Before using this method you will need to define a service and re-compile your p
 You can create an AlarmService using the below properties:
 
 * <b>service</b> - (Required) The full service name from your AndroidManifest.xml to be run.
-* <b>minute</b> - (Required) The minute of the start time. 
-* <b>hour</b> - (Optional) The hour you want to start the alarm
-* <b>day</b> - (Optional) The day you want to start the alarm
-* <b>month</b> - (Optional) The month you want to start the alarm
-* <b>year</b> - (Optional) The year you want to start the alarm
+* <b>requestCode</b> (Optional) (int) ID for the specific alarm being created. If the requestCode, it will update the saved alarm
+* <b>second</b> - (Required) (int) The second of the start time. 
+* <b>minute</b> - (Required) (int) The minute of the start time. 
+* <b>hour</b> - (Optional) (int) The hour you want to start the alarm
+* <b>day</b> - (Optional) (int) The day you want to start the alarm
+* <b>month</b> - (Optional) (int) The month you want to start the alarm
+* <b>year</b> - (Optional) (int) The year you want to start the alarm
 * <b>interval</b> - (Optional) The value used to create an interval service. This value must be in milliseconds.
 * <b>forceRestart</b> - (Optional) Force the service to restart if it is already running.
 * <b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.
@@ -109,16 +113,35 @@ The valid repeat options are:
 You can also provide a millisecond value to schedule your own repeat frequency.
 
 <h3>cancelAlarmNotification</h3>
-This method cancels all alarms submitted using the addAlarmNotification method.  Unfortunately if you want to cancel only one alarm you need to cancel them all and re-submit.  This is due to how Android handles pendingIntents.
+This method cancels the alarm linked to the requestCode provided when calling the addAlarmNotification method.
 
-<h3>cancelAlarmService</h3>
-This method cancels all alarms submitted using the addAlarmService method.  Unfortunately if you want to cancel only one alarm you need to cancel them all and re-submit.  This is due to how Android handles pendingIntents.
+<b>Below parameters:</b>
+* (int)(Optional) Provide an int with the requestCode used when creating the Alarm
+
+<b>Sample:</b>
+<pre><code>
+//Sample
+alarmManager.cancelAlarmNotification(41);	
+</code></pre>
+
+<h3>addAlarmService</h3>
+This method cancels the alarm linked to the requestCode provided when calling the addAlarmService method.
+
+<b>Below parameters:</b>
+* (int)(Optional) Provide an int with the requestCode used when creating the Alarm
+
+<b>Sample:</b>
+<pre><code>
+//Sample
+alarmManager.addAlarmService(41);	
+</code></pre>
 
 <h3>Method Usage Example</h3>
 The below example shows how to use all of the methods. For additional samples please see the example folder contained within the module or [here on Github](https://github.com/benbahrenburg/benCoding.SMS/tree/master/example).
 
 <pre><code>
 //Import our module into our Titanium App
+var requestCode = 41;
 var alarmModule = require('bencoding.alarmmanager');
 var alarmManager = alarmModule.createAlarmManager();
 
@@ -140,7 +163,8 @@ ew1.show();
 
 //Below is an example on how you can provide a full date to schedule your alarm
 //Set an Alarm to publish a notification in about two minutes and repeat each minute
-alarmManager.addAlarmNotification({		
+alarmManager.addAlarmNotification({	
+	requestCode:requestCode,	
 	year: now.getFullYear(),
 	month: now.getMonth(),
 	day: now.getDate(),
@@ -158,7 +182,7 @@ var ew2 = Ti.UI.createAlertDialog({
  ew2.show();	
     
 //Cancel our Notification based Alarms 
-alarmManager.cancelAlarmNotification();	
+alarmManager.cancelAlarmNotification(requestCode);	
 var ew9 = Ti.UI.createAlertDialog({
 	title:'Info', message:"Your alarm notification has been cancelled",
 	buttonNames:[Ti.Android.currentActivity.getString(Ti.Android.R.string.ok)]
@@ -208,8 +232,11 @@ ew10.show();
 <h3>Can I schedule application events?</h3>
 Since your application needs to be active to receive these events it is best to use the Alarm Service to schedule a background service in your application. This will ensure the app is awake and you can generate events from there.
 
+<h3>Can I schedule more then one alarm?</h3>
+To schedule multiple alarms provide a unique requestCode when adding your alarms. This will allow you to create several different alarms. If you later want to cancel the alarms, you will need to provide the requestCode used when creating the alarm.
+
 <h3>How does cancel work?</h3>
-Android handles the cancel action at a PendingIntent level.  This means that when you call cancelAlarmNotification it cancels any Alarm you've schedule using addAlarmNotification.  The same is true to cancelAlarmService and addAlarmService.
+To cancel a specific alarm please provide the requestCode used when creating the alarm. If you did not provide a requestCode leave the parameter empty for the cancel method.
 
 <h3>Can I use my own Notification icons?</h3>
 Yes but the URL must be an image located in Resources/android/images/ or an Android content URI.
