@@ -31,6 +31,8 @@ public class AlarmManagerProxy extends KrollProxy {
 	private static final String LCAT = "AlarmManager";
 	private static final boolean FORCE_LOG = true;
 	private static final int DEFAULT_REQUEST_CODE = 192837;
+	public static String rootActivityClassName = "";
+
 	public AlarmManagerProxy() {
 		super();
 	}
@@ -108,6 +110,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_vibrate", doVibrate);
 		intent.putExtra("notification_show_lights", showLights);
 		intent.putExtra("notification_requestcode", requestCode);
+		intent.putExtra("notification_root_classname", rootActivityClassName);
 		return intent;
 	}
 	
@@ -345,5 +348,18 @@ public class AlarmManagerProxy extends KrollProxy {
 		}
 			
 		utils.msgLogger(LCAT, "Alarm Service Request Created",FORCE_LOG);	
+	}
+
+	@Kroll.method
+	public void setRootActivityClassName(@Kroll.argument(optional=true) Object className){
+		//
+		utils.msgLogger(LCAT, "Request to set rootActivityClassName", FORCE_LOG);
+
+		if (className != null) {
+			if (className instanceof String) {
+				utils.msgLogger(LCAT, "Setting rootActivityClassName to: " + className, FORCE_LOG);
+				rootActivityClassName = (String)className;
+			}
+		}
 	}
 }
