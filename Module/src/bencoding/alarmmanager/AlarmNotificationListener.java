@@ -31,6 +31,8 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	utils.msgLogger(LCAT,"contentTitle is " + contentTitle);
     	String contentText = bundle.getString("notification_msg");
     	utils.msgLogger(LCAT,"contentText is " + contentText);
+    	String className = bundle.getString("notification_root_classname");
+    	utils.msgLogger(LCAT,"className is " + className);
     	boolean hasIcon = bundle.getBoolean("notification_has_icon", FORCE_LOG);
         int icon = R.drawable.stat_notify_more;        
         if(hasIcon){
@@ -49,14 +51,22 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         
     	mNotificationManager =(NotificationManager) TiApplication.getInstance().getSystemService(TiApplication.NOTIFICATION_SERVICE);
     	utils.msgLogger(LCAT,"NotificationManager created");
-    	showNotification(TiApplication.getInstance().getApplicationContext(),contentTitle,contentText,icon,playSound,doVibrate,showLights); 	
+    	showNotification(TiApplication.getInstance().getApplicationContext(),contentTitle,contentText,icon,playSound,doVibrate,showLights,className); 	
     }
-    private void showNotification(Context context, String contentTitle, String contentText, int contentIcon, boolean playSound, boolean doVibrate, boolean showLights) {
+    private void showNotification(Context context, String contentTitle, String contentText, int contentIcon, boolean playSound, boolean doVibrate, boolean showLights, String className) {
     	utils.msgLogger(LCAT,"Building Notification");  
     	// MAKE SURE YOU HAVE android:launchMode="singleTask" SET IN YOUR TIAPP.XML FILE
     	// IF YOU DON'T HAVE THIS, IT WILL RESTART YOUR APP
     	// See the sample project for an example
-    	Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(),TiApplication.getInstance().getRootOrCurrentActivity().getClass());    	
+		Intent intent = null;
+		try {
+			utils.msgLogger(LCAT,"Trying to get a class for name '" + className + "'");
+			Class intentClass = Class.forName(className);
+			intent = new Intent(TiApplication.getInstance().getApplicationContext(), intentClass);
+		} catch (ClassNotFoundException e) {
+			utils.msgLogger(LCAT,"Unable to get Class.forName '" + AlarmManagerProxy.rootActivityClassName + "', using getRootOrCurrentActivity() instead");
+			intent = new Intent(TiApplication.getInstance().getApplicationContext(),TiApplication.getInstance().getRootOrCurrentActivity().getClass());
+		}
     	Notification notification = new Notification(contentIcon, contentTitle, System.currentTimeMillis());		 
     	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
     	
