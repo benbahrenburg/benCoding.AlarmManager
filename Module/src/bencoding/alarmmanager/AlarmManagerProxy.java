@@ -111,6 +111,8 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_show_lights", showLights);
 		intent.putExtra("notification_requestcode", requestCode);
 		intent.putExtra("notification_root_classname", rootActivityClassName);
+		int requestCode = args.optInt("requestCode", DEFAULT_REQUEST_CODE);
+		intent.setData(Uri.parse("alarmId://" + requestCode));
 		return intent;
 	}
 	
