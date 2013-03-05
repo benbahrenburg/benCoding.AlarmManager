@@ -5,7 +5,7 @@ The benCoding.AlarmManager module enables you to use the native Android AlarmMan
 This project can be found on github at [https://github.com/benbahrenburg/benCoding.AlarmManager](https://github.com/benbahrenburg/benCoding.AlarmManager)
 
 <h2>Before you start</h2>
-* This is an Android module designed to work with Titanium SDK 1.8.2 or greater.
+* This is an Android module designed to work with Titanium SDK 3.0.2 or greater.
 * Before getting start please note you need to compile this module yourself
 
 <h2>What is in the repo?</h2>
@@ -57,7 +57,7 @@ You can reach more about BroadcastReceivers [here.](http://developer.android.com
 The addAlarmNotification allows you to schedule an Alarm that will then create an notification.
 
 You can create an AlarmNotification using the below properties:
-* <b>requestCode</b> (Optional) (int) ID for the specific alarm being created. If the requestCode, it will update the saved alarm
+* <b>requestCode</b> (Required) (int) ID for the specific alarm being created. If the requestCode, it will update the saved alarm
 * <b>second</b> - (Required) (int) The second of the start time. 
 * <b>minute</b> - (Required) (int) The minute of the start time. 
 * <b>hour</b> - (Optional) (int) The hour you want to start the alarm
@@ -116,7 +116,7 @@ You can also provide a millisecond value to schedule your own repeat frequency.
 This method cancels the alarm linked to the requestCode provided when calling the addAlarmNotification method.
 
 <b>Below parameters:</b>
-* (int)(Optional) Provide an int with the requestCode used when creating the Alarm
+* (int)(Required) Provide an int with the requestCode used when creating the Alarm
 
 <b>Sample:</b>
 <pre><code>
