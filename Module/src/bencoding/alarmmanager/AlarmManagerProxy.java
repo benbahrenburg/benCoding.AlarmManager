@@ -24,13 +24,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 
 import android.content.Intent;
+import android.net.Uri;
 
 @Kroll.proxy(creatableInModule=AlarmmanagerModule.class)
 public class AlarmManagerProxy extends KrollProxy {
 	NotificationManager mNotificationManager;
-	private static final String LCAT = "AlarmManager";
 	private static final boolean FORCE_LOG = true;
-	private static final int DEFAULT_REQUEST_CODE = 192837;
 	public static String rootActivityClassName = "";
 
 	public AlarmManagerProxy() {
@@ -66,14 +65,13 @@ public class AlarmManagerProxy extends KrollProxy {
 		return cal;
 	}
 
-	private Intent createAlarmNotifyIntent(KrollDict args){
+	private Intent createAlarmNotifyIntent(KrollDict args,int requestCode){
 		int notificationIcon = 0;
 		String contentTitle = "";
 		String contentText = "";
 		boolean playSound = optionIsEnabled(args,"playSound");
 		boolean doVibrate = optionIsEnabled(args,"vibrate");
 		boolean showLights = optionIsEnabled(args,"showLights");
-		int requestCode = args.optInt("requestCode", DEFAULT_REQUEST_CODE);
 		if (args.containsKeyAndNotNull(TiC.PROPERTY_CONTENT_TITLE)
 				|| args.containsKeyAndNotNull(TiC.PROPERTY_CONTENT_TEXT))
 			{
@@ -94,8 +92,8 @@ public class AlarmManagerProxy extends KrollProxy {
 				String iconFullUrl = resolveUrl(null, iconUrl);
 				notificationIcon = TiUIHelper.getResourceId(iconFullUrl);
 				if (notificationIcon == 0) {
-					utils.msgLogger(LCAT, "No image found for " + iconUrl);
-					utils.msgLogger(LCAT, "Default icon will be used");
+					utils.msgLogger("No image found for " + iconUrl);
+					utils.msgLogger("Default icon will be used");
 				}
 			}
 		}
@@ -111,7 +109,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_show_lights", showLights);
 		intent.putExtra("notification_requestcode", requestCode);
 		intent.putExtra("notification_root_classname", rootActivityClassName);
-		int requestCode = args.optInt("requestCode", DEFAULT_REQUEST_CODE);
+		intent.putExtra("notification_request_code", requestCode);
 		intent.setData(Uri.parse("alarmId://" + requestCode));
 		return intent;
 	}
@@ -119,15 +117,17 @@ public class AlarmManagerProxy extends KrollProxy {
 	@Kroll.method
 	public void cancelAlarmNotification(@Kroll.argument(optional=true) Object requestCode){
 		// To cancel an alarm the signature needs to be the same as the submitting one.
-		utils.msgLogger(LCAT, "Cancelling Alarm Notification",FORCE_LOG);		
+		utils.msgLogger("Cancelling Alarm Notification",FORCE_LOG);		
 		//Set the default request code
-		int intentRequestCode = DEFAULT_REQUEST_CODE;
+		int intentRequestCode = AlarmmanagerModule.DEFAULT_REQUEST_CODE;
 		//If the optional code was provided, cast accordingly
 		if(requestCode != null){
 			if (requestCode instanceof Number) {
 				intentRequestCode = ((Number)requestCode).intValue();
 			}
 		}	
+
+		utils.msgLogger("Cancelling requestCode = " + requestCode,FORCE_LOG);	
 		
 		//Create a placeholder for the args value
 		HashMap<String, Object> placeholder = new HashMap<String, Object>(0);
@@ -135,10 +135,10 @@ public class AlarmManagerProxy extends KrollProxy {
 		
 		//Create the Alarm Manager
 		AlarmManager am = (AlarmManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.ALARM_SERVICE);
-		Intent intent = createAlarmNotifyIntent(args);
+		Intent intent = createAlarmNotifyIntent(args,intentRequestCode);
 		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), intentRequestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		am.cancel(sender);	
-		utils.msgLogger(LCAT, "Alarm Notification Canceled",FORCE_LOG);
+		utils.msgLogger("Alarm Notification Canceled",FORCE_LOG);
 	}
 	private boolean optionIsEnabled(KrollDict args,String paramName){		
 		if (args.containsKeyAndNotNull(paramName)){
@@ -150,18 +150,18 @@ public class AlarmManagerProxy extends KrollProxy {
 	}
 	private boolean hasRepeating(KrollDict args){
 		boolean results = (args.containsKeyAndNotNull("repeat"));
-		utils.msgLogger(LCAT, "Repeat Frequency enabled: " + results);
+		utils.msgLogger("Repeat Frequency enabled: " + results);
 		return results;
 	}
 	private long repeatingFrequency(KrollDict args){
 		long freqResults = utils.DAILY_MILLISECONDS;
 		Object repeat = args.get("repeat");
 		if (repeat instanceof Number) {
-			utils.msgLogger(LCAT, "Repeat value provided in milliseconds found");
+			utils.msgLogger("Repeat value provided in milliseconds found");
 			freqResults = ((Number)repeat).longValue();
 		} else {
 			String repeatValue = TiConvert.toString(repeat);
-			utils.msgLogger(LCAT, "Repeat value of " + repeatValue + " found");
+			utils.msgLogger("Repeat value of " + repeatValue + " found");
 			if(repeatValue.toUpperCase()=="HOURLY"){
 				freqResults=utils.HOURLY_MILLISECONDS;
 			}			
@@ -175,7 +175,7 @@ public class AlarmManagerProxy extends KrollProxy {
 				freqResults=utils.YEARLY_MILLISECONDS;
 			}			
 		}
-		utils.msgLogger(LCAT, "Repeat Frequency in milliseconds is " + freqResults);
+		utils.msgLogger("Repeat Frequency in milliseconds is " + freqResults);
 		return freqResults;
 	}
 	@Kroll.method
@@ -217,27 +217,26 @@ public class AlarmManagerProxy extends KrollProxy {
 
 		//Get the requestCode if provided, if none provided
 		//we use 192837 for backwards compatibility
-		int requestCode = args.optInt("requestCode", DEFAULT_REQUEST_CODE);
+		int requestCode = args.optInt("requestCode", AlarmmanagerModule.DEFAULT_REQUEST_CODE);
 								
         String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		utils.msgLogger(LCAT, "Creating Alarm Notification for: " 
-            + sdf.format(calendar.getTime()), FORCE_LOG);
+		utils.msgLogger("Creating Alarm Notification for: "  + sdf.format(calendar.getTime()), FORCE_LOG);
 
 		//Create the Alarm Manager
 		AlarmManager am = (AlarmManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.ALARM_SERVICE);
-		Intent intent = createAlarmNotifyIntent(args);
+		Intent intent = createAlarmNotifyIntent(args,requestCode);
 		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), requestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		
 		if(isRepeating){
-			utils.msgLogger(LCAT, "Setting Alarm to repeat");
+			utils.msgLogger("Setting Alarm to repeat");
 			am.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), repeatingFrequency, sender);
 		}else{
-			utils.msgLogger(LCAT, "Setting Alarm for a single run");
+			utils.msgLogger("Setting Alarm for a single run");
 			am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
 		}
 
-		utils.msgLogger(LCAT, "Alarm Notification Created",FORCE_LOG);
+		utils.msgLogger("Alarm Notification Created",FORCE_LOG);
 	}
 
 	private Intent createAlarmServiceIntent(KrollDict args){
@@ -262,7 +261,7 @@ public class AlarmManagerProxy extends KrollProxy {
 			intent.putExtra("alarm_service_interval", intervalValue);
 		}
 
-		utils.msgLogger(LCAT, "created alarm service intent for " + serviceName
+		utils.msgLogger("created alarm service intent for " + serviceName
             + "(forceRestart: " 
             + (optionIsEnabled(args,"forceRestart") ? "true" : "false")
             + ", intervalValue: " 
@@ -274,8 +273,8 @@ public class AlarmManagerProxy extends KrollProxy {
 	@Kroll.method
 	public void cancelAlarmService(@Kroll.argument(optional=true) Object requestCode){	
 		// To cancel an alarm the signature needs to be the same as the submitting one.
-		utils.msgLogger(LCAT, "Cancelling Alarm Service",FORCE_LOG);		
-		int intentRequestCode = DEFAULT_REQUEST_CODE;			
+		utils.msgLogger("Cancelling Alarm Service",FORCE_LOG);		
+		int intentRequestCode = AlarmmanagerModule.DEFAULT_REQUEST_CODE;			
 		if(requestCode != null){
 			if (requestCode instanceof Number) {
 				intentRequestCode = ((Number)requestCode).intValue();
@@ -291,7 +290,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		Intent intent = createAlarmServiceIntent(args);
 		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), intentRequestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		am.cancel(sender);	
-		utils.msgLogger(LCAT, "Alarm Service Canceled",FORCE_LOG);		
+		utils.msgLogger("Alarm Service Canceled",FORCE_LOG);		
 	}
 	@Kroll.method
 	public void addAlarmService(@SuppressWarnings("rawtypes") HashMap hm){		
@@ -329,37 +328,37 @@ public class AlarmManagerProxy extends KrollProxy {
 
 		//Get the requestCode if provided, if none provided
 		//we use 192837 for backwards compatibility
-		int requestCode = args.optInt("requestCode", DEFAULT_REQUEST_CODE);	
+		int requestCode = args.optInt("requestCode", AlarmmanagerModule.DEFAULT_REQUEST_CODE);	
 		
         String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		utils.msgLogger(LCAT, "Creating Alarm Notification for: " 
+		utils.msgLogger("Creating Alarm Notification for: " 
             + sdf.format(calendar.getTime()), FORCE_LOG);
 
 		AlarmManager am = (AlarmManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.ALARM_SERVICE);
 		Intent intent = createAlarmServiceIntent(args);
 
 		if(isRepeating){
-			utils.msgLogger(LCAT, "Setting Alarm to repeat at frequency " + repeatingFrequency);
+			utils.msgLogger("Setting Alarm to repeat at frequency " + repeatingFrequency);
 		    PendingIntent pendingIntent = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), requestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), repeatingFrequency, pendingIntent);
 		}else{
 			PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), requestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
-			utils.msgLogger(LCAT, "Setting Alarm for a single run");
+			utils.msgLogger("Setting Alarm for a single run");
 			am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
 		}
 			
-		utils.msgLogger(LCAT, "Alarm Service Request Created",FORCE_LOG);	
+		utils.msgLogger("Alarm Service Request Created",FORCE_LOG);	
 	}
 
 	@Kroll.method
 	public void setRootActivityClassName(@Kroll.argument(optional=true) Object className){
 		//
-		utils.msgLogger(LCAT, "Request to set rootActivityClassName", FORCE_LOG);
+		utils.msgLogger("Request to set rootActivityClassName", FORCE_LOG);
 
 		if (className != null) {
 			if (className instanceof String) {
-				utils.msgLogger(LCAT, "Setting rootActivityClassName to: " + className, FORCE_LOG);
+				utils.msgLogger("Setting rootActivityClassName to: " + className, FORCE_LOG);
 				rootActivityClassName = (String)className;
 			}
 		}

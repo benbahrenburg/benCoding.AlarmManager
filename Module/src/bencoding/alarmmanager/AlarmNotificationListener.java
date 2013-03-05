@@ -18,57 +18,62 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class AlarmNotificationListener extends BroadcastReceiver {
-    private static final String LCAT = "AlarmNotificationListener";
     private static final boolean FORCE_LOG = true;
-    int YOURAPP_NOTIFICATION_ID = 100;
     NotificationManager mNotificationManager;
 
     @Override 
     public void onReceive(Context context, Intent intent) {
-    	utils.msgLogger(LCAT,"In Alarm Notification Listener",FORCE_LOG);
+    	utils.msgLogger("In Alarm Notification Listener",FORCE_LOG);
     	Bundle bundle = intent.getExtras();
-    	String contentTitle = bundle.getString("notification_title");
-    	utils.msgLogger(LCAT,"contentTitle is " + contentTitle);
+    	if(bundle.get("notification_request_code") == null){
+    		utils.msgLogger("notification_request_code is null assume cancelled",FORCE_LOG);
+    		return;
+    	}
+    	int requestCode = bundle.getInt("notification_request_code", AlarmmanagerModule.DEFAULT_REQUEST_CODE);	
+    	utils.msgLogger("requestCode is " + requestCode);
+    	String contentTitle = bundle.getString("notification_title");	
+    	utils.msgLogger("contentTitle is " + contentTitle);
     	String contentText = bundle.getString("notification_msg");
-    	utils.msgLogger(LCAT,"contentText is " + contentText);
+    	utils.msgLogger("contentText is " + contentText);
     	String className = bundle.getString("notification_root_classname");
-    	utils.msgLogger(LCAT,"className is " + className);
+    	utils.msgLogger("className is " + className);
     	boolean hasIcon = bundle.getBoolean("notification_has_icon", FORCE_LOG);
         int icon = R.drawable.stat_notify_more;        
         if(hasIcon){
         	icon = bundle.getInt("notification_icon",R.drawable.stat_notify_more);
-        	utils.msgLogger(LCAT,"User provided an icon of " + icon);
+        	utils.msgLogger("User provided an icon of " + icon);
         }else{
-        	utils.msgLogger(LCAT,"No icon provided, default will be used");
+        	utils.msgLogger("No icon provided, default will be used");
         }
         //Add default notification flags
         boolean playSound =  bundle.getBoolean("notification_play_sound",false);
-        utils.msgLogger(LCAT,"On notification play sound? " + new Boolean(playSound).toString());
+        utils.msgLogger("On notification play sound? " + new Boolean(playSound).toString());
         boolean doVibrate =  bundle.getBoolean("notification_vibrate",false);
-        utils.msgLogger(LCAT,"On notification vibrate? " + new Boolean(doVibrate).toString());
+        utils.msgLogger("On notification vibrate? " + new Boolean(doVibrate).toString());
         boolean showLights =  bundle.getBoolean("notification_show_lights",false);
-        utils.msgLogger(LCAT,"On notification show lights? " + new Boolean(showLights).toString());
+        utils.msgLogger("On notification show lights? " + new Boolean(showLights).toString());
         
     	mNotificationManager =(NotificationManager) TiApplication.getInstance().getSystemService(TiApplication.NOTIFICATION_SERVICE);
-    	utils.msgLogger(LCAT,"NotificationManager created");
-    	showNotification(TiApplication.getInstance().getApplicationContext(),contentTitle,contentText,icon,playSound,doVibrate,showLights,className); 	
+    	utils.msgLogger("NotificationManager created");
+    	showNotification(contentTitle,contentText,icon,playSound,doVibrate,showLights,className,requestCode);
+
     }
-    private void showNotification(Context context, String contentTitle, String contentText, int contentIcon, boolean playSound, boolean doVibrate, boolean showLights, String className) {
-    	utils.msgLogger(LCAT,"Building Notification");  
+    private void showNotification(String contentTitle, String contentText, int contentIcon, boolean playSound, boolean doVibrate, boolean showLights, String className, int requestCode) {
+    	utils.msgLogger("Building Notification");  
     	// MAKE SURE YOU HAVE android:launchMode="singleTask" SET IN YOUR TIAPP.XML FILE
     	// IF YOU DON'T HAVE THIS, IT WILL RESTART YOUR APP
     	// See the sample project for an example
 		Intent intent = null;
 		try {
-			utils.msgLogger(LCAT,"Trying to get a class for name '" + className + "'");
-			Class intentClass = Class.forName(className);
+			utils.msgLogger("Trying to get a class for name '" + className + "'");
+			@SuppressWarnings("rawtypes")Class intentClass = Class.forName(className);
 			intent = new Intent(TiApplication.getInstance().getApplicationContext(), intentClass);
 		} catch (ClassNotFoundException e) {
-			utils.msgLogger(LCAT,"Unable to get Class.forName '" + AlarmManagerProxy.rootActivityClassName + "', using getRootOrCurrentActivity() instead");
+			utils.msgLogger("Unable to get Class.forName '" + AlarmManagerProxy.rootActivityClassName + "', using getRootOrCurrentActivity() instead");
 			intent = new Intent(TiApplication.getInstance().getApplicationContext(),TiApplication.getInstance().getRootOrCurrentActivity().getClass());
 		}
     	Notification notification = new Notification(contentIcon, contentTitle, System.currentTimeMillis());		 
-    	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
+    	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), requestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
     	
     	//Set the notifications flags
     	if(playSound){
@@ -85,8 +90,8 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	
     	//notification.setLatestEventInfo(TiApplication.getInstance().getRootOrCurrentActivity(), contentTitle,contentText, sender);
     	notification.setLatestEventInfo(TiApplication.getInstance().getApplicationContext(), contentTitle,contentText, sender);
-    	utils.msgLogger(LCAT,"Notifying");        
-    	mNotificationManager.notify(YOURAPP_NOTIFICATION_ID, notification);
-    	utils.msgLogger(LCAT,"You should now see a notification",FORCE_LOG);    
-   } 
+    	utils.msgLogger("Notifying");        
+    	mNotificationManager.notify(requestCode, notification);
+    	utils.msgLogger("You should now see a notification",FORCE_LOG);    
+   }
 }

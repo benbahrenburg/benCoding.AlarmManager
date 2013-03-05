@@ -24,7 +24,6 @@ import android.content.Intent;
 
 @Kroll.proxy(creatableInModule=AlarmmanagerModule.class)
 public class AlarmProxy extends KrollProxy {
-	private static final String LCAT = "AlarmmanagerModule";
 
 	public AlarmProxy() {
 		super();
@@ -34,7 +33,7 @@ public class AlarmProxy extends KrollProxy {
 	@Kroll.method
 	public void addAlarmService(@SuppressWarnings("rawtypes") HashMap hm){
 		
-		Log.d(LCAT, "Start creating Alarm Service Request");		
+		Log.d(AlarmmanagerModule.MODULE_FULL_NAME, "Start creating Alarm Service Request");		
 		KrollDict args = new KrollDict(hm);
 		String serviceName = args.getString("service_name");
 		Calendar defaultDay = Calendar.getInstance();
@@ -52,7 +51,7 @@ public class AlarmProxy extends KrollProxy {
 		intent.putExtra("alarm_service_name", serviceName);
 		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), 192837, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);		
-		Log.d(LCAT, "Alarm Created");	
+		Log.d(AlarmmanagerModule.MODULE_FULL_NAME, "Alarm Created");	
 		 
 	}	
 }
