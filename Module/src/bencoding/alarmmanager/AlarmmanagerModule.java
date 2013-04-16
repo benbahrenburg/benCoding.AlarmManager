@@ -14,7 +14,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 public class AlarmmanagerModule extends KrollModule
 {
 	public static final int DEFAULT_REQUEST_CODE = 192837;
-	public static final String MODULE_FULL_NAME = "bencoding.AlarmManage";
+	public static final String MODULE_FULL_NAME = "bencoding.AlarmManager";
 	public AlarmmanagerModule()
 	{
 		super();
