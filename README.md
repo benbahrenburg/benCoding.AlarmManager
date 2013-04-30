@@ -230,7 +230,7 @@ To cancel a specific alarm please provide the requestCode used when creating the
 Yes but the URL must be an image located in Resources/android/images/ or an Android content URI.
 
 <h3>My project isn't receiving alarm</h3>
-Please make sure you have the correct receiver entries setup in your tiapp.xml file.  See the ExampleProject for details. Additionally after adding the receiver entries you will need to clean your project and relaunch the emulator.
+Please make sure you have the correct receiver entries setup in your tiapp.xml file.  See the example tiapp.xml for details. Additionally after adding the receiver entries you will need to clean your project and relaunch the emulator.
 
 <h3>Why does it restart my app when I click on the notification?</h3>
 You need to make sure you have the singleTop launchMode set in your tiapp.xml file.  See below for a snippet and the ExampleProject for an full example.
