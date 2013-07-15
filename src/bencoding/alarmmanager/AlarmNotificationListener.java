@@ -12,6 +12,7 @@ import android.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.net.Uri;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +46,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         }else{
         	utils.msgLogger("No icon provided, default will be used");
         }
+        String sound = bundle.getString("notification_sound");
         //Add default notification flags
         boolean playSound =  bundle.getBoolean("notification_play_sound",false);
         utils.msgLogger("On notification play sound? " + new Boolean(playSound).toString());
@@ -55,10 +57,10 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         
     	mNotificationManager =(NotificationManager) TiApplication.getInstance().getSystemService(TiApplication.NOTIFICATION_SERVICE);
     	utils.msgLogger("NotificationManager created");
-    	showNotification(contentTitle,contentText,icon,playSound,doVibrate,showLights,className,requestCode);
+    	showNotification(contentTitle,contentText,icon,sound,playSound,doVibrate,showLights,className,requestCode);
 
     }
-    private void showNotification(String contentTitle, String contentText, int contentIcon, boolean playSound, boolean doVibrate, boolean showLights, String className, int requestCode) {
+    private void showNotification(String contentTitle, String contentText, int contentIcon, String sound, boolean playSound, boolean doVibrate, boolean showLights, String className, int requestCode) {
     	utils.msgLogger("Building Notification");  
     	// MAKE SURE YOU HAVE android:launchMode="singleTask" SET IN YOUR TIAPP.XML FILE
     	// IF YOU DON'T HAVE THIS, IT WILL RESTART YOUR APP
@@ -76,7 +78,9 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), requestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
     	
     	//Set the notifications flags
-    	if(playSound){
+    	if(!sound.equals("")){
+    		notification.sound = Uri.parse(sound);
+    	}else if(playSound){
     		notification.defaults |= Notification.DEFAULT_SOUND;
     	}
     	if(doVibrate){
