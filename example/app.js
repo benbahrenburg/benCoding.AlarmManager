@@ -46,6 +46,7 @@ btn2.addEventListener('click',function(e){
 		minute:2, //Set the number of minutes until the alarm should go off
 		contentTitle:'Alarm #2', //Set the title of the Notification that will appear
 		contentText:'Alarm & Notify Basic Repeat', //Set the body of the notification that will apear
+		sound: Ti.Filesystem.getResRawDirectory() + 'alarm', //Set a custom sound to play, located at: platform/android/res/raw/alarm.mp3
 		repeat:60000 //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
 		//Or as shown above you can provide the millesecond value 
 	});	

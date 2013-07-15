@@ -69,6 +69,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		int notificationIcon = 0;
 		String contentTitle = "";
 		String contentText = "";
+		String notificationSound = "";
 		boolean playSound = optionIsEnabled(args,"playSound");
 		boolean doVibrate = optionIsEnabled(args,"vibrate");
 		boolean showLights = optionIsEnabled(args,"showLights");
@@ -97,6 +98,10 @@ public class AlarmManagerProxy extends KrollProxy {
 				}
 			}
 		}
+		
+		if (args.containsKey(TiC.PROPERTY_SOUND)){
+			notificationSound = TiConvert.toString(args, TiC.PROPERTY_SOUND);
+		}
 
 		Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(), AlarmNotificationListener.class);
 		//Add some extra information so when the alarm goes off we have enough to create the notification
@@ -104,6 +109,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_msg", contentText);
 		intent.putExtra("notification_has_icon", (notificationIcon!=0));
 		intent.putExtra("notification_icon", notificationIcon);
+		intent.putExtra("notification_sound", notificationSound);
 		intent.putExtra("notification_play_sound", playSound);		
 		intent.putExtra("notification_vibrate", doVibrate);
 		intent.putExtra("notification_show_lights", showLights);
