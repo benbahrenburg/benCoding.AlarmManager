@@ -55,6 +55,7 @@ You can create an AlarmNotification using the below properties:
 * <b>contentTitle</b> - (Required) (string) The title of the notification
 * <b>contentText</b> - (Required) (string) The text of the notification
 * <b>playSound</b> (Optional) (bool) Play the default notification sound when alarm triggered. 
+* <b>sound</b> (Optional) (string) URL to the sound to play.
 * <b>vibrate</b> (Optional) (bool) Vibrate the device on notification. Please note this requires the vibrate permission.
 * <b>showLights</b> (Optional) (bool) Activate notification lights on device when alarm triggered.
 * <b>icon</b> - (Optional)The icon of the notification, this can be a system icon or resource included path
@@ -160,6 +161,7 @@ alarmManager.addAlarmNotification({
 	minute: now.getMinutes() + 2, //Set the number of minutes until the alarm should go off
 	contentTitle:'Alarm #3', //Set the title of the Notification that will appear
 	contentText:'Alarm & Notify Scheduled', //Set the body of the notification that will apear
+	sound: Ti.Filesystem.getResRawDirectory() + 'alarm', //Set a custom sound to play, located at: platform/android/res/raw/alarm.mp3
 	repeat:60000 //You can use the words hourly,daily,weekly,monthly,yearly or you can provide milliseconds.
 	//Or as shown above you can provide the millesecond value 	
 });	
