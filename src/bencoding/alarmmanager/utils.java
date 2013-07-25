@@ -6,7 +6,7 @@
  */
 package bencoding.alarmmanager;
 
-import android.util.Log;
+import org.appcelerator.kroll.common.Log;
 
 public class utils {
 	public static final long YEARLY_MILLISECONDS =  31536000000L;
@@ -17,18 +17,26 @@ public class utils {
 
 	private static boolean _writeToLog = false;
 
+	public static boolean isEmptyString(String str) {
+		return !(str != null && str.trim().length() > 0);
+	}
     public static void setDebug(boolean value){
     	_writeToLog = value;
     }
     
-    public static void msgLogger(String logMessage){
-    	msgLogger(logMessage,false);
+    public static void errorLog(String message){
+    	Log.e(AlarmmanagerModule.MODULE_FULL_NAME, message);
     }
-    public static void msgLogger(String logMessage, boolean requireLog){
+  
+    public static void errorLog(Exception message){
+    	Log.e(AlarmmanagerModule.MODULE_FULL_NAME, message.getMessage());
+    }
+    public static void infoLog(String message){
+    	Log.i(AlarmmanagerModule.MODULE_FULL_NAME, message);
+    }
+    public static void debugLog(String logMessage){
     	if(_writeToLog){
     		Log.d(AlarmmanagerModule.MODULE_FULL_NAME, logMessage);
-    	} else if (requireLog) {
-    		Log.d(AlarmmanagerModule.MODULE_FULL_NAME, logMessage);
-    	}
+    	} 
     }
 }
