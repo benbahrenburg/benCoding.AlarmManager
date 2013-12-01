@@ -11,7 +11,7 @@ copyright: Copyright (c) 2013 by Benjamin Bahrenburg
 
 
 # these should not be edited
-name: alarmmanager
+name: alarmmgr
 moduleid: bencoding.alarmmanager
 guid: 40b8ff43-40b3-4491-b718-968b88ee0fbb
 platform: android
