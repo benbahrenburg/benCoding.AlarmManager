@@ -86,11 +86,16 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     		}
     	}
     	if(doVibrate){
-    		notification.defaults |=Notification.DEFAULT_VIBRATE;
+    		notification.defaults |= Notification.DEFAULT_VIBRATE;
     	}
     	if(showLights){
-    		notification.defaults |=Notification.DEFAULT_LIGHTS;
+    		notification.defaults |= Notification.DEFAULT_LIGHTS;
+    		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
     	}
+    	if (playSound && doVibrate && showLights){
+    		notification.defaults = Notification.DEFAULT_ALL;
+    	}
+    	
     	//Set alarm flags
     	notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_AUTO_CANCEL;
     	return notification;
