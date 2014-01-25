@@ -264,6 +264,12 @@ You need to make sure you have the singleTop launchMode set in your tiapp.xml fi
 <h3>What happens to my alarms when the user uninstalls the app?</h3>
 Android removes your alarms when the user uninstalls your app.
 
+<h3>Where do I find the testservice.js file</h3>
+The testservice.js file can be copied from the KitchenSink example provided by Appcelerator. If you need a copy of this file you can find it in their github account here [https://github.com/appcelerator/titanium_mobile/blob/master/demos/KitchenSink/Resources/android/testservice.js](https://github.com/appcelerator/titanium_mobile/blob/master/demos/KitchenSink/Resources/android/testservice.js)
+
+<h3>My Project can't find testservice.js</h3>
+I would recommend trying different paths in your app, for example the root of your project, or platform/android, or Resoures/Android .  Depending on your version of Titanium the answer could be different.
+
 <h2>Licensing & Support</h2>
 
 This project is licensed under the OSI approved Apache Public License (version 2). For details please see the license associated with each project.

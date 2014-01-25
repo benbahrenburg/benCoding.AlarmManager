@@ -79,7 +79,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     private Notification createNotifyFlags(Notification notification, boolean playSound, String soundPath, boolean doVibrate, boolean showLights){
     	//Set the notifications flags
     	if(playSound){
-    		if(utils.isEmptyString(soundPath)){
+    		if(!utils.isEmptyString(soundPath)){
     			notification.sound = Uri.parse(soundPath);
     		}else{
     			notification.defaults |= Notification.DEFAULT_SOUND;
