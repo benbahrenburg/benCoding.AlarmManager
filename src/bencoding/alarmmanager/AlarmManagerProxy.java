@@ -118,6 +118,12 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.setData(Uri.parse("alarmId://" + requestCode));
 		return intent;
 	}
+
+	@Kroll.method
+	public String findStartActivityName(){
+		return TiApplication.getInstance().getApplicationContext().getPackageManager()
+             	.getLaunchIntentForPackage( TiApplication.getInstance().getApplicationContext().getPackageName() ).getClass().getName();
+	}
 	
 	@Kroll.method
 	public void cancelAlarmNotification(@Kroll.argument(optional=true) Object requestCode){
