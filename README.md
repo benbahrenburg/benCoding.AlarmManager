@@ -1,11 +1,17 @@
-<h1>benCoding.AlarmManager Module</h1>
+<h1>bencoding.AlarmManager Module</h1>
 
-The benCoding.AlarmManager module enables you to use the native Android AlarmManager in your Titanium apps to schedule notifications and services.
+The bencoding.AlarmManager module enables you to use the native Android AlarmManager in your Titanium apps to schedule notifications and services.
 
 This project can be found on github at [https://github.com/benbahrenburg/benCoding.AlarmManager](https://github.com/benbahrenburg/benCoding.AlarmManager)
 
+<h2>IMPORTANT</h2>
+This module, provides access to the Android AlarmManager, which works very differently then iOS Local Notifications.  Please read the Android Docs to understand the limitations and differences between these to very different approaches. Android docs are available [here](http://developer.android.com/reference/android/app/AlarmManager.html).
+
+<h2>SUPPORT</h2>
+No project, "how do I", or "can it" support is provided for this module. The code is available for your reference and usage. If you find an issue and want to contribute Pull Requests are appreciated.  If you are interested in being a contributor and helping with community support please contact me via Twitter.
+
 <h2>Before you start</h2>
-* This is an Android module designed to work with Titanium SDK 3.0.2 or greater.
+* This is an Android module designed to work with Titanium SDK 3.2.0 or greater.
 * Before getting start please note you need to compile this module yourself
 
 <h2>Building from source</h2>
@@ -270,7 +276,7 @@ The testservice.js file can be copied from the KitchenSink example provided by A
 <h3>My Project can't find testservice.js</h3>
 I would recommend trying different paths in your app, for example the root of your project, or platform/android, or Resoures/Android .  Depending on your version of Titanium the answer could be different.
 
-<h2>Licensing & Support</h2>
+<h2>Licensing</h2>
 
 This project is licensed under the OSI approved Apache Public License (version 2). For details please see the license associated with each project.
 
