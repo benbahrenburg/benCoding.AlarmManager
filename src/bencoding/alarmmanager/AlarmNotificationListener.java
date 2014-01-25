@@ -79,38 +79,54 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     private Notification createNotifyFlags(Notification notification, boolean playSound, String soundPath, boolean doVibrate, boolean showLights){
     	//Set the notifications flags
     	if(playSound){
-    		if(!utils.isEmptyString(soundPath)){
-    			notification.sound = Uri.parse(soundPath);
-    		}else{
+    		if(utils.isEmptyString(soundPath)){
     			notification.defaults |= Notification.DEFAULT_SOUND;
+    		}else{
+    			notification.sound = Uri.parse(soundPath);
     		}
     	}
+    	
     	if(doVibrate){
     		notification.defaults |=Notification.DEFAULT_VIBRATE;
     	}
     	if(showLights){
     		notification.defaults |=Notification.DEFAULT_LIGHTS;
+    		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
     	}
+    	if (playSound && doVibrate && showLights){
+    		notification.defaults = Notification.DEFAULT_ALL;
+    	}
+    	
     	//Set alarm flags
     	notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_AUTO_CANCEL;
     	return notification;
     }
     private Intent createIntent(String className){
-    	Intent intent = null;
 		try {
 			if(utils.isEmptyString(className)){
-				utils.debugLog("Using application context");
-				intent = new Intent(TiApplication.getInstance().getApplicationContext(),TiApplication.getInstance().getRootOrCurrentActivity().getClass());				
+				//If no activity is provided, use the App Start Activity
+				utils.debugLog("Using application Start Activity");
+				
+				Intent iStartActivity = TiApplication.getInstance().getApplicationContext().getPackageManager()
+		             	.getLaunchIntentForPackage( TiApplication.getInstance().getApplicationContext().getPackageName() );
+        		
+					//Add the flags needed to restart
+					iStartActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					iStartActivity.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+					iStartActivity.addCategory(Intent.CATEGORY_LAUNCHER);
+					iStartActivity.setAction(Intent.ACTION_MAIN);
+					
+				return iStartActivity;
+	
 			}else{
 				utils.debugLog("Trying to get a class for name '" + className + "'");
 				@SuppressWarnings("rawtypes")Class intentClass = Class.forName(className);
-				intent = new Intent(TiApplication.getInstance().getApplicationContext(), intentClass);				
+				return new Intent(TiApplication.getInstance().getApplicationContext(), intentClass);				
 			}
 
 		} catch (ClassNotFoundException e) {
 			utils.errorLog(e);
-		}  
-		
-		return intent;
+			return null;
+		}  		
     }
 }
