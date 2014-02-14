@@ -32,19 +32,6 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 
 Now we have the module installed and avoid in our project we can start to use the components, see the feature guide below for details.
 
-<h2>Receivers</h2>
-Android Alarm's work using BroadcastReceivers.  In order to have your Titanium project subscribe to the Alarms it generates you need to add the receivers into your tiapp.xml file.
-
-The benCoding.AlarmManager uses two receivers. One for each kind of Alarm you can schedule.  See below for the example.
-
-
-	<receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"></receiver>
-    <receiver android:name="bencoding.alarmmanager.AlarmServiceListener"></receiver> 
-
-Given all of the different configuration options needed, I highly recommend starting with the ExampleProject before incorporating into another project.
-
-You can reach more about BroadcastReceivers [here.](http://developer.android.com/reference/android/content/BroadcastReceiver.html)
-
 <h2>Methods</h2>
 
 <h3>addAlarmNotification</h3>
@@ -257,8 +244,6 @@ You need to make sure you have the singleTop launchMode set in your tiapp.xml fi
                         <category android:name="android.intent.category.LAUNCHER"/>
                     </intent-filter>
                 </activity>
-                 <receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"></receiver>
-                 <receiver android:name="bencoding.alarmmanager.AlarmServiceListener"></receiver>  
             </application>
         </manifest>
         <services>
