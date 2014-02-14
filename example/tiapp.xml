@@ -42,8 +42,6 @@
                         <category android:name="android.intent.category.LAUNCHER"/>
                     </intent-filter>
                 </activity>
-                <receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"/>
-                <receiver android:name="bencoding.alarmmanager.AlarmServiceListener"/>
             </application>
         </manifest>
         <services>
