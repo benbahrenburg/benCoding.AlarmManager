@@ -32,19 +32,6 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 
 Now we have the module installed and avoid in our project we can start to use the components, see the feature guide below for details.
 
-<h2>Receivers</h2>
-Android Alarm's work using BroadcastReceivers.  In order to have your Titanium project subscribe to the Alarms it generates you need to add the receivers into your tiapp.xml file.
-
-The benCoding.AlarmManager uses two receivers. One for each kind of Alarm you can schedule.  See below for the example.
-
-
-	<receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"></receiver>
-    <receiver android:name="bencoding.alarmmanager.AlarmServiceListener"></receiver> 
-
-Given all of the different configuration options needed, I highly recommend starting with the ExampleProject before incorporating into another project.
-
-You can reach more about BroadcastReceivers [here.](http://developer.android.com/reference/android/content/BroadcastReceiver.html)
-
 <h2>Methods</h2>
 
 <h3>addAlarmNotification</h3>
@@ -64,7 +51,7 @@ You can create an AlarmNotification using the below properties:
 * <b>sound</b> (Optional) (string) URL to the sound to play.
 * <b>vibrate</b> (Optional) (bool) Vibrate the device on notification. Please note this requires the vibrate permission.
 * <b>showLights</b> (Optional) (bool) Activate notification lights on device when alarm triggered.
-* <b>icon</b> - (Optional)The icon of the notification, this can be a system icon or resource included path
+* <b>icon</b> - (Optional)The icon of the notification, this can be a system icon or resource included path, e.g. use `Ti.App.Android.R.drawable.appicon` to use your app icon at `platform/android/res/drawable-*/appicon.png`.
 * <b>repeat</b> - (Optional) (int) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.
 
 Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from the current time If second is provided, alarm will be set to now plus the number of seconds provided; if minute is provided, alarm will be set for now plus the number of minutes provided.
@@ -81,7 +68,7 @@ You can also provide a millisecond value to schedule your own repeat frequency.
 <h3>addAlarmService</h3>
 The addAlarmService allows you to schedule an Alarm that will run a service within your Titanium App.
 
-Before using this method you will need to define a service and re-compile your project. After recompiling your project open your /build/AndroidManifest.xml to file your full service name.  This is important as Titanium generates this name. To learn more about Android Services please read the documentation [here](http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Service-object).
+Before using this method you will need to define a service and re-compile your project. After recompiling your project open your /build/AndroidManifest.xml to file your ifull service name.  This is important as Titanium generates this name. To learn more about Android Services please read the documentation [here](http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Service-object).
 
 You can create an AlarmService using the below properties:
 
@@ -145,7 +132,7 @@ var now = new Date();
 
 //Set an Alarm to publish a notification in about two minutes
 alarmManager.addAlarmNotification({
-    icon: Ti.Android.R.drawable.star_on, //Optional icon must be a resource id or url
+    icon: Ti.App.Android.R.drawable.appicon, //Optional icon must be a resource id or url
 	minute:2, //Set the number of minutes until the alarm should go off
 	contentTitle:'Alarm #2', //Set the title of the Notification that will appear
 	contentText:'Alarm & Notify Basic Repeat' //Set the body of the notification that will apear
@@ -257,8 +244,6 @@ You need to make sure you have the singleTop launchMode set in your tiapp.xml fi
                         <category android:name="android.intent.category.LAUNCHER"/>
                     </intent-filter>
                 </activity>
-                 <receiver android:name="bencoding.alarmmanager.AlarmNotificationListener"></receiver>
-                 <receiver android:name="bencoding.alarmmanager.AlarmServiceListener"></receiver>  
             </application>
         </manifest>
         <services>

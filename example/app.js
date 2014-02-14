@@ -21,7 +21,7 @@ win.add(btn1);
 btn1.addEventListener('click',function(e){
 	alarmManager.addAlarmNotification({
 		requestCode: 41, //Request ID used to identify a specific alarm. Provide the same requestCode twice to update 
-		icon: Ti.Android.R.drawable.star_on, //Optional icon must be a resource id or url
+		icon: Ti.App.Android.R.drawable.appicon, //Optional icon must be a resource id or url
 		minute:2, //Set the number of minutes until the alarm should go off
 		contentTitle:'Alarm #1', //Set the title of the Notification that will appear
 		contentText:'Alarm & Notify Basic', //Set the body of the notification that will apear

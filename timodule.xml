@@ -1,17 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ti:module xmlns:ti="http://ti.appcelerator.org" xmlns:android="http://schemas.android.com/apk/res/android">
-	<android:manifest>
-		<!-- App must have this permission to use the library -->
-		<uses-permission android:name="android.permission.WAKE_LOCK" />
-
-		<application>
-			<receiver android:name="AlarmNotificationListener">
-			</receiver>
-			<receiver android:name="AlarmServiceListener">
-			</receiver>
-		</application>
-	</android:manifest>	    
-
-	<mobileweb>
-	</mobileweb>
+<ti:module
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:ti="http://ti.appcelerator.org">
+    <android xmlns:android="http://schemas.android.com/apk/res/android">
+        <manifest>
+            <application>
+            	<receiver android:name="bencoding.alarmmanager.AlarmNotificationListener" />
+            	<receiver android:name="bencoding.alarmmanager.AlarmServiceListener" /> 
+            </application>
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+        </manifest>
+    </android>
 </ti:module>
