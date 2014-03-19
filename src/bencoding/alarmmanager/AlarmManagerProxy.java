@@ -99,7 +99,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		}
 		
 		if (args.containsKey(TiC.PROPERTY_SOUND)){
-			notificationSound = TiConvert.toString(args, TiC.PROPERTY_SOUND);
+		    notificationSound = resolveUrl(null, TiConvert.toString(args, TiC.PROPERTY_SOUND));
 		}
 
 		Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(), AlarmNotificationListener.class);
