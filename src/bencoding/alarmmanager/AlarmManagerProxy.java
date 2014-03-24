@@ -22,7 +22,6 @@ import org.appcelerator.titanium.util.TiUIHelper;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-
 import android.content.Intent;
 import android.net.Uri;
 
@@ -32,7 +31,9 @@ public class AlarmManagerProxy extends KrollProxy {
 	public static String rootActivityClassName = "";
 
 	public AlarmManagerProxy() {
-		super();
+		super();	    
+	    rootActivityClassName = TiApplication.getInstance().getApplicationContext().getPackageName() + "." + TiApplication.getAppRootOrCurrentActivity().getClass().getSimpleName();
+		utils.debugLog("rootActivityClassName = " + rootActivityClassName);
 	}
 
 	private Calendar getSecondBasedCalendar(KrollDict args){
@@ -128,7 +129,7 @@ public class AlarmManagerProxy extends KrollProxy {
 	@Kroll.method
 	public void cancelAlarmNotification(@Kroll.argument(optional=true) Object requestCode){
 		// To cancel an alarm the signature needs to be the same as the submitting one.
-		utils.infoLog("Cancelling Alarm Notification");		
+		utils.debugLog("Cancelling Alarm Notification");		
 		//Set the default request code
 		int intentRequestCode = AlarmmanagerModule.DEFAULT_REQUEST_CODE;
 		//If the optional code was provided, cast accordingly
@@ -138,7 +139,7 @@ public class AlarmManagerProxy extends KrollProxy {
 			}
 		}	
 
-		utils.infoLog("Cancelling requestCode = " + requestCode);	
+		utils.debugLog("Cancelling requestCode = " + requestCode);	
 		
 		//Create a placeholder for the args value
 		HashMap<String, Object> placeholder = new HashMap<String, Object>(0);
@@ -149,7 +150,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		Intent intent = createAlarmNotifyIntent(args,intentRequestCode);
 		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), intentRequestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		am.cancel(sender);	
-		utils.infoLog("Alarm Notification Canceled");
+		utils.debugLog("Alarm Notification Canceled");
 	}
 	private boolean optionIsEnabled(KrollDict args,String paramName){		
 		if (args.containsKeyAndNotNull(paramName)){

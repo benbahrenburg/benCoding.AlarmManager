@@ -103,25 +103,32 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     }
     private Intent createIntent(String className){
 		try {
+			
 			if(utils.isEmptyString(className)){
 				//If no activity is provided, use the App Start Activity
-				utils.debugLog("Using application Start Activity");
+				utils.infoLog("[AlarmManager] Using application Start Activity");
 				
 				Intent iStartActivity = TiApplication.getInstance().getApplicationContext().getPackageManager()
 		             	.getLaunchIntentForPackage( TiApplication.getInstance().getApplicationContext().getPackageName() );
         		
-					//Add the flags needed to restart
-					iStartActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					iStartActivity.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					iStartActivity.addCategory(Intent.CATEGORY_LAUNCHER);
-					iStartActivity.setAction(Intent.ACTION_MAIN);
+				//Add the flags needed to restart
+				iStartActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				iStartActivity.addCategory(Intent.CATEGORY_LAUNCHER);
+				iStartActivity.setAction(Intent.ACTION_MAIN);
 					
 				return iStartActivity;
 	
 			}else{
-				utils.debugLog("Trying to get a class for name '" + className + "'");
+				
+				utils.infoLog("[AlarmManager] Trying to get a class for name '" + className + "'");
 				@SuppressWarnings("rawtypes")Class intentClass = Class.forName(className);
-				return new Intent(TiApplication.getInstance().getApplicationContext(), intentClass);				
+				Intent intentFromClass = new Intent(TiApplication.getInstance().getApplicationContext(), intentClass);
+				//Add the flags needed to restart
+				intentFromClass.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				intentFromClass.addCategory(Intent.CATEGORY_LAUNCHER);
+				intentFromClass.setAction(Intent.ACTION_MAIN);
+				
+				return intentFromClass;
 			}
 
 		} catch (ClassNotFoundException e) {
