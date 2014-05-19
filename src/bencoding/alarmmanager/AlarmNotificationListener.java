@@ -47,6 +47,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         	utils.debugLog("No icon provided, default will be used");
         }
         String soundPath = bundle.getString("notification_sound");
+        boolean hasCustomSound = !utils.isEmptyString(soundPath);
         //Add default notification flags
         boolean playSound =  bundle.getBoolean("notification_play_sound",false);
         utils.debugLog("On notification play sound? " + new Boolean(playSound).toString());
@@ -67,7 +68,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
   
     	
     	utils.debugLog("setting notification flags"); 
-    	notification = createNotifyFlags(notification,playSound,soundPath,doVibrate,showLights);
+    	notification = createNotifyFlags(notification,playSound,hasCustomSound,soundPath,doVibrate,showLights);
     	utils.debugLog("setLatestEventInfo"); 
     	notification.setLatestEventInfo(TiApplication.getInstance().getApplicationContext(), contentTitle,contentText, sender);
     	utils.debugLog("Notifying using requestCode =" + requestCode);        
@@ -76,13 +77,13 @@ public class AlarmNotificationListener extends BroadcastReceiver {
 
     }
     
-    private Notification createNotifyFlags(Notification notification, boolean playSound, String soundPath, boolean doVibrate, boolean showLights){
+    private Notification createNotifyFlags(Notification notification, boolean playSound, boolean hasCustomSound, String soundPath, boolean doVibrate, boolean showLights){
     	//Set the notifications flags
     	if(playSound){
-    		if(utils.isEmptyString(soundPath)){
-    			notification.defaults |= Notification.DEFAULT_SOUND;
-    		}else{
+    		if(hasCustomSound){
     			notification.sound = Uri.parse(soundPath);
+    		}else{
+    			notification.defaults |= Notification.DEFAULT_SOUND;
     		}
     	}
     	
@@ -93,7 +94,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     		notification.defaults |=Notification.DEFAULT_LIGHTS;
     		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
     	}
-    	if (playSound && doVibrate && showLights){
+    	if (playSound && !hasCustomSound && doVibrate && showLights){
     		notification.defaults = Notification.DEFAULT_ALL;
     	}
     	
