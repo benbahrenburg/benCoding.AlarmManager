@@ -139,7 +139,7 @@ public class AlarmManagerProxy extends KrollProxy {
 			}
 		}	
 
-		utils.debugLog("Cancelling requestCode = " + requestCode);	
+		utils.debugLog(String.format("Cancelling requestCode = {%d}", intentRequestCode));
 		
 		//Create a placeholder for the args value
 		HashMap<String, Object> placeholder = new HashMap<String, Object>(0);
