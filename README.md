@@ -106,8 +106,8 @@ This method cancels the alarm linked to the requestCode provided when calling th
 alarmManager.cancelAlarmNotification(41);	
 </code></pre>
 
-<h3>addAlarmService</h3>
-This method cancels the alarm linked to the requestCode provided when calling the addAlarmService method.
+<h3>cancelAlarmService</h3>
+This method cancels the alarm linked to the requestCode provided when calling the cancelAlarmService method.
 
 <b>Below parameters:</b>
 * (int)(Optional) Provide an int with the requestCode used when creating the Alarm
@@ -115,7 +115,7 @@ This method cancels the alarm linked to the requestCode provided when calling th
 <b>Sample:</b>
 <pre><code>
 //Sample
-alarmManager.addAlarmService(41);	
+alarmManager.cancelAlarmService(41);	
 </code></pre>
 
 <h3>Method Usage Example</h3>
