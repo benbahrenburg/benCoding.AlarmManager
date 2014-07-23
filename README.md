@@ -95,7 +95,7 @@ The valid repeat options are:
 You can also provide a millisecond value to schedule your own repeat frequency.
 
 <h3>cancelAlarmNotification</h3>
-This method cancels the alarm linked to the requestCode provided when calling the addAlarmNotification method.
+This method cancels the alarm linked to the requestCode provided when calling the cancelAlarmNotification method.
 
 <b>Below parameters:</b>
 * (int)(Required) Provide an int with the requestCode used when creating the Alarm
