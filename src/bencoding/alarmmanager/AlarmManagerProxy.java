@@ -367,6 +367,13 @@ public class AlarmManagerProxy extends KrollProxy {
 		NotificationManager notificationManager = (NotificationManager) TiApplication.getInstance().getSystemService(TiApplication.NOTIFICATION_SERVICE);
 		notificationManager.cancel(requestCode);
 	}
+	
+	@Kroll.method
+	public void cancelNotifications(){
+		NotificationManager notificationManager = (NotificationManager) TiApplication.getInstance().getSystemService(TiApplication.NOTIFICATION_SERVICE);
+		notificationManager.cancelAll();
+	}
+	
 	@Kroll.method
 	public void setRootActivityClassName(@Kroll.argument(optional=true) Object className){
 		//
