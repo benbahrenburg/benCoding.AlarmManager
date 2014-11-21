@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.11
+version: 0.12
 apiversion: 2
 description: This module provides Titanium access to Androids Alarm Manager functionality
 author: Benjamin Bahrenburg
