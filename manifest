@@ -4,7 +4,7 @@
 #
 version: 0.11
 apiversion: 2
-architectures: armeabi armeabi-v7a
+architectures: armeabi armeabi-v7a x86
 description: This module provides Titanium access to Androids Alarm Manager functionality
 author: Benjamin Bahrenburg
 license: See include license file
