@@ -24,7 +24,7 @@ btn1.addEventListener('click',function(e){
 		icon: Ti.App.Android.R.drawable.appicon, //Optional icon must be a resource id or url
 		minute:2, //Set the number of minutes until the alarm should go off
 		contentTitle:'Alarm #1', //Set the title of the Notification that will appear
-		contentText:'Alarm & Notify Basic', //Set the body of the notification that will apear
+		contentText:'Alarm & Notify Basic with some long text that spans over multiple lines', //Set the body of the notification that will apear
 		playSound:true, //On notification play the default sound ( by default off )
 		vibrate:true, //On notification vibrate device ( by default off )
 		showLights: true, //On notification show the device lights ( by default off )
