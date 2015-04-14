@@ -25,15 +25,14 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 
+import bencoding.alarmmanager.AlarmmanagerModule;
+
 @Kroll.proxy(creatableInModule=AlarmmanagerModule.class)
 public class AlarmManagerProxy extends KrollProxy {
 	NotificationManager mNotificationManager;
-	public static String rootActivityClassName = "";
 
 	public AlarmManagerProxy() {
-		super();	    
-	    rootActivityClassName = TiApplication.getInstance().getApplicationContext().getPackageName() + "." + TiApplication.getAppRootOrCurrentActivity().getClass().getSimpleName();
-		utils.debugLog("rootActivityClassName = " + rootActivityClassName);
+		super();
 	}
 
 	private Calendar getSecondBasedCalendar(KrollDict args){
@@ -114,7 +113,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_vibrate", doVibrate);
 		intent.putExtra("notification_show_lights", showLights);
 		intent.putExtra("notification_requestcode", requestCode);
-		intent.putExtra("notification_root_classname", rootActivityClassName);
+		intent.putExtra("notification_root_classname", AlarmmanagerModule.rootActivityClassName);
 		intent.putExtra("notification_request_code", requestCode);
 		intent.setData(Uri.parse("alarmId://" + requestCode));
 		return intent;
@@ -382,7 +381,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		if (className != null) {
 			if (className instanceof String) {
 				utils.infoLog("Setting rootActivityClassName to: " + className);
-				rootActivityClassName = (String)className;
+				AlarmmanagerModule.rootActivityClassName = (String)className;
 			}
 		}
 	}
