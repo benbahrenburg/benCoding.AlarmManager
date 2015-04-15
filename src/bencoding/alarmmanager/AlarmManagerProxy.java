@@ -30,12 +30,24 @@ public class AlarmManagerProxy extends KrollProxy {
 	NotificationManager mNotificationManager;
 	public static String rootActivityClassName = "";
 
+
 	public AlarmManagerProxy() {
 		super();	    
-	    rootActivityClassName = TiApplication.getInstance().getApplicationContext().getPackageName() + "." + TiApplication.getAppRootOrCurrentActivity().getClass().getSimpleName();
-		utils.debugLog("rootActivityClassName = " + rootActivityClassName);
+		addDefaultActivityClass();
 	}
 
+	private void addDefaultActivityClass(){
+		try{
+			if(TiApplication.getAppRootOrCurrentActivity() !=null){
+			    rootActivityClassName = TiApplication.getInstance().getApplicationContext().getPackageName() + "." + TiApplication.getAppRootOrCurrentActivity().getClass().getSimpleName();
+				utils.debugLog("rootActivityClassName = " + rootActivityClassName);				
+			}
+		}
+        catch (Exception ex) {
+          utils.errorLog(ex);
+        }
+	}
+	
 	private Calendar getSecondBasedCalendar(KrollDict args){
 		int interval = args.getInt("second");
 		Calendar cal = Calendar.getInstance();
@@ -384,6 +396,8 @@ public class AlarmManagerProxy extends KrollProxy {
 				utils.infoLog("Setting rootActivityClassName to: " + className);
 				rootActivityClassName = (String)className;
 			}
+		}else{
+			addDefaultActivityClass();
 		}
 	}
 }
