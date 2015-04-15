@@ -33,20 +33,7 @@ public class AlarmManagerProxy extends KrollProxy {
 
 
 	public AlarmManagerProxy() {
-		super();	    
-		addDefaultActivityClass();
-	}
-
-	private void addDefaultActivityClass(){
-		try{
-			if(TiApplication.getAppRootOrCurrentActivity() !=null){
-			    rootActivityClassName = TiApplication.getInstance().getApplicationContext().getPackageName() + "." + TiApplication.getAppRootOrCurrentActivity().getClass().getSimpleName();
-				utils.debugLog("rootActivityClassName = " + rootActivityClassName);				
-			}
-		}
-        catch (Exception ex) {
-          utils.errorLog(ex);
-        }
+		super();
 	}
 	
 	private Calendar getSecondBasedCalendar(KrollDict args){
@@ -411,8 +398,6 @@ public class AlarmManagerProxy extends KrollProxy {
 				utils.infoLog("Setting rootActivityClassName to: " + className);
 				AlarmmanagerModule.rootActivityClassName = (String)className;
 			}
-		}else{
-			addDefaultActivityClass();
 		}
 	}
 }
