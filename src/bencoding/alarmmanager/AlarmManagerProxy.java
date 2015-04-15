@@ -25,27 +25,15 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
 
+import bencoding.alarmmanager.AlarmmanagerModule;
+
 @Kroll.proxy(creatableInModule=AlarmmanagerModule.class)
 public class AlarmManagerProxy extends KrollProxy {
 	NotificationManager mNotificationManager;
-	public static String rootActivityClassName = "";
 
 
 	public AlarmManagerProxy() {
-		super();	    
-		addDefaultActivityClass();
-	}
-
-	private void addDefaultActivityClass(){
-		try{
-			if(TiApplication.getAppRootOrCurrentActivity() !=null){
-			    rootActivityClassName = TiApplication.getInstance().getApplicationContext().getPackageName() + "." + TiApplication.getAppRootOrCurrentActivity().getClass().getSimpleName();
-				utils.debugLog("rootActivityClassName = " + rootActivityClassName);				
-			}
-		}
-        catch (Exception ex) {
-          utils.errorLog(ex);
-        }
+		super();
 	}
 	
 	private Calendar getSecondBasedCalendar(KrollDict args){
@@ -126,7 +114,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_vibrate", doVibrate);
 		intent.putExtra("notification_show_lights", showLights);
 		intent.putExtra("notification_requestcode", requestCode);
-		intent.putExtra("notification_root_classname", rootActivityClassName);
+		intent.putExtra("notification_root_classname", AlarmmanagerModule.rootActivityClassName);
 		intent.putExtra("notification_request_code", requestCode);
 
 		// As of API 19 setRepeating == setInexactRepeating, see also:
@@ -408,10 +396,8 @@ public class AlarmManagerProxy extends KrollProxy {
 		if (className != null) {
 			if (className instanceof String) {
 				utils.infoLog("Setting rootActivityClassName to: " + className);
-				rootActivityClassName = (String)className;
+				AlarmmanagerModule.rootActivityClassName = (String)className;
 			}
-		}else{
-			addDefaultActivityClass();
 		}
 	}
 }
