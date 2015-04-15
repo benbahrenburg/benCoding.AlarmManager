@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.12
+version: 0.123
 apiversion: 2
 architectures: armeabi armeabi-v7a x86
 description: This module provides Titanium access to Androids Alarm Manager functionality
