@@ -8,9 +8,9 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/benjamin/Android/sdk/platforms/android-10/android.jar"/>
-	<classpathentry kind="lib" path="/Users/benjamin/Library/Application Support/Titanium/mobilesdk/osx/3.2.0.GA/android/kroll-apt.jar"/>
-	<classpathentry kind="lib" path="/Users/benjamin/Library/Application Support/Titanium/mobilesdk/osx/3.2.0.GA/android/kroll-common.jar"/>
-	<classpathentry kind="lib" path="/Users/benjamin/Library/Application Support/Titanium/mobilesdk/osx/3.2.0.GA/android/titanium.jar"/>
+	<classpathentry kind="lib" path="/Users/benbahrenburg/Library/Application Support/Titanium/mobilesdk/osx/3.5.1.GA/android/kroll-apt.jar"/>
+	<classpathentry kind="lib" path="/Users/benbahrenburg/Library/Application Support/Titanium/mobilesdk/osx/3.5.1.GA/android/kroll-common.jar"/>
+	<classpathentry kind="lib" path="/Users/benbahrenburg/Library/Application Support/Titanium/mobilesdk/osx/3.5.1.GA/android/titanium.jar"/>
+	<classpathentry kind="lib" path="/Users/benbahrenburg/Android/sdk/platforms/android-15/android.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

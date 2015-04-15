@@ -6,6 +6,12 @@
  */
 package bencoding.alarmmanager;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
+import android.app.AlarmManager;
+
 import org.appcelerator.titanium.TiApplication;
 
 import android.R;
@@ -75,8 +81,55 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	notificationManager.notify(requestCode, notification);
     	utils.infoLog("You should now see a notification");
 
+    	if (bundle.getLong("notification_repeat_ms", 0) > 0) {
+    		createRepeatNotification(bundle);
+    	}
+    	
     }
-    
+    private void createRepeatNotification(Bundle bundle) {
+        
+    	Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(), AlarmNotificationListener.class);
+    	// Use the same extras as the original notification
+    	intent.putExtras(bundle);
+    	
+    	// Update date and time by repeat interval (in milliseconds)
+		int day = bundle.getInt("notification_day");
+		int month = bundle.getInt("notification_month");
+		int year = bundle.getInt("notification_year");
+		int hour = bundle.getInt("notification_hour");
+		int minute = bundle.getInt("notification_minute");
+		int second = bundle.getInt("notification_second");
+		Calendar cal = new GregorianCalendar(year, month, day);
+		cal.add(Calendar.HOUR_OF_DAY, hour);
+		cal.add(Calendar.MINUTE, minute);
+		cal.add(Calendar.SECOND, second);
+		
+    	Calendar now = Calendar.getInstance();
+    	long repeat_ms = bundle.getLong("notification_repeat_ms", 0);
+    	int repeat_s = (int)repeat_ms / 1000;
+    	
+		// Add frequence until cal > now
+		while (now.getTimeInMillis() > cal.getTimeInMillis()) {
+			cal.add(Calendar.SECOND, repeat_s);
+		}
+
+    	int requestCode = bundle.getInt("notification_request_code", AlarmmanagerModule.DEFAULT_REQUEST_CODE);
+		intent.setData(Uri.parse("alarmId://" + requestCode));
+		long ms = cal.getTimeInMillis();
+		
+		Date date = new Date(ms);
+		String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+		utils.infoLog("Creating Alarm Notification repeat for: "  + sdf.format(date));
+		
+		//Create the Alarm Manager
+		AlarmManager am = (AlarmManager) TiApplication.getInstance().getApplicationContext()
+			.getSystemService(TiApplication.ALARM_SERVICE);
+		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(),
+			requestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
+		am.set(AlarmManager.RTC_WAKEUP, ms, sender);
+		
+    } 
     private Notification createNotifyFlags(Notification notification, boolean playSound, boolean hasCustomSound, String soundPath, boolean doVibrate, boolean showLights){
     	//Set the notifications flags
     	if(playSound){

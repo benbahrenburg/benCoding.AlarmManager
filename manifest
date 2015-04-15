@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.12
+version: 0.123
 apiversion: 2
 architectures: armeabi armeabi-v7a x86
 description: This module provides Titanium access to Androids Alarm Manager functionality
@@ -16,4 +16,4 @@ name: alarmmanager
 moduleid: bencoding.alarmmanager
 guid: 40b8ff43-40b3-4491-b718-968b88ee0fbb
 platform: android
-minsdk: 3.2.0
+minsdk: 3.5.1.GA

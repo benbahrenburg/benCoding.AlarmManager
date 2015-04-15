@@ -31,10 +31,24 @@ import bencoding.alarmmanager.AlarmmanagerModule;
 public class AlarmManagerProxy extends KrollProxy {
 	NotificationManager mNotificationManager;
 
+
 	public AlarmManagerProxy() {
-		super();
+		super();	    
+		addDefaultActivityClass();
 	}
 
+	private void addDefaultActivityClass(){
+		try{
+			if(TiApplication.getAppRootOrCurrentActivity() !=null){
+			    rootActivityClassName = TiApplication.getInstance().getApplicationContext().getPackageName() + "." + TiApplication.getAppRootOrCurrentActivity().getClass().getSimpleName();
+				utils.debugLog("rootActivityClassName = " + rootActivityClassName);				
+			}
+		}
+        catch (Exception ex) {
+          utils.errorLog(ex);
+        }
+	}
+	
 	private Calendar getSecondBasedCalendar(KrollDict args){
 		int interval = args.getInt("second");
 		Calendar cal = Calendar.getInstance();
@@ -115,6 +129,20 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_requestcode", requestCode);
 		intent.putExtra("notification_root_classname", AlarmmanagerModule.rootActivityClassName);
 		intent.putExtra("notification_request_code", requestCode);
+
+		// As of API 19 setRepeating == setInexactRepeating, see also:
+		// http://developer.android.com/reference/android/app/AlarmManager.html#setRepeating(int, long, long, android.app.PendingIntent)
+		if (android.os.Build.VERSION.SDK_INT >= 19 && hasRepeating(args)) {
+			intent.putExtra("notification_repeat_ms", repeatingFrequency(args));
+			Calendar cal = getFullCalendar(args);
+			intent.putExtra("notification_year", cal.get(Calendar.YEAR));
+			intent.putExtra("notification_month", cal.get(Calendar.MONTH));
+			intent.putExtra("notification_day", cal.get(Calendar.DAY_OF_MONTH));
+			intent.putExtra("notification_hour", cal.get(Calendar.HOUR_OF_DAY));
+			intent.putExtra("notification_minute", cal.get(Calendar.MINUTE));
+			intent.putExtra("notification_second", cal.get(Calendar.SECOND));
+		}
+		
 		intent.setData(Uri.parse("alarmId://" + requestCode));
 		return intent;
 	}
@@ -239,7 +267,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		Intent intent = createAlarmNotifyIntent(args,requestCode);
 		PendingIntent sender = PendingIntent.getBroadcast( TiApplication.getInstance().getApplicationContext(), requestCode, intent,  PendingIntent.FLAG_UPDATE_CURRENT );
 		
-		if(isRepeating){
+		if(isRepeating && !intent.hasExtra("notification_repeat_ms")){
 			utils.debugLog("Setting Alarm to repeat");
 			am.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), repeatingFrequency, sender);
 		}else{
@@ -383,6 +411,8 @@ public class AlarmManagerProxy extends KrollProxy {
 				utils.infoLog("Setting rootActivityClassName to: " + className);
 				AlarmmanagerModule.rootActivityClassName = (String)className;
 			}
+		}else{
+			addDefaultActivityClass();
 		}
 	}
 }
