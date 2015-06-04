@@ -104,6 +104,9 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 <ul>
 <li><b>service</b> - (Required) The full service name from your AndroidManifest.xml to be run.</li>
 <li><b>requestCode</b> (Optional) (int) ID for the specific alarm being created. If the requestCode, it will update the saved alarm</li>
+<li><b>itemId</b> (Optional) (string) itemId to transfer parameter to service. You can read with:
+ <pre>Ti.Android.currentService.getIntent().getStringExtra('itemId');</pre></li>
+
 <li><b>second</b> - (Required) (int) The second of the start time. </li>
 <li><b>minute</b> - (Required) (int) The minute of the start time. </li>
 <li><b>hour</b> - (Optional) (int) The hour you want to start the alarm</li>

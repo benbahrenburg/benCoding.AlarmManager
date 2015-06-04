@@ -32,7 +32,6 @@ public class AlarmServiceListener  extends BroadcastReceiver {
         String fullServiceName = bundle.getString("alarm_service_name");
         boolean forceRestart = bundle.getBoolean("alarm_service_force_restart",false);
         boolean hasInterval = bundle.getBoolean("alarm_service_has_interval",false);
-        
         utils.debugLog("Full Service Name: " + fullServiceName);
         if (this.isServiceRunning(context,fullServiceName)) {        	
         	if(forceRestart){
@@ -49,7 +48,7 @@ public class AlarmServiceListener  extends BroadcastReceiver {
  
       	Intent serviceIntent = new Intent();
       	serviceIntent.setClassName(TiApplication.getInstance().getApplicationContext(), fullServiceName);
-       	
+      	serviceIntent.putExtra("itemId",bundle.getString("itemId","0"));
       	utils.debugLog("Is this an interval service? " + new Boolean(hasInterval).toString());      	
       	if(hasInterval){
       		utils.debugLog("Is this an interval amount " + bundle.getLong("alarm_service_interval", 45*60*1000L));

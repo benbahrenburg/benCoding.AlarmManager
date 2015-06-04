@@ -286,7 +286,15 @@ public class AlarmManagerProxy extends KrollProxy {
 		if(hasInterval){
 			intent.putExtra("alarm_service_interval", intervalValue);
 		}
-
+        
+        
+        //Check if the user has setted an itemId
+        if((args.containsKeyAndNotNull("itemId"))){
+            String itemId = (String)args.get("itemId");
+            intent.putExtra("itemId", itemId);
+        }
+        intent.putExtra("test", "TEST");
+        
 		utils.debugLog("created alarm service intent for " + serviceName
             + "(forceRestart: " 
             + (optionIsEnabled(args,"forceRestart") ? "true" : "false")
