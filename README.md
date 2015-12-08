@@ -51,7 +51,8 @@ You can create an AlarmNotification using the below properties:
 * <b>sound</b> (Optional) (string) URL to the sound to play.
 * <b>vibrate</b> (Optional) (bool) Vibrate the device on notification. Please note this requires the vibrate permission.
 * <b>showLights</b> (Optional) (bool) Activate notification lights on device when alarm triggered.
-* <b>icon</b> - (Optional)The icon of the notification, this can be a system icon or resource included path, e.g. use `Ti.App.Android.R.drawable.appicon` to use your app icon at `platform/android/res/drawable-*/appicon.png`.
+* <b>icon</b> - (Optional)The small icon of the notification, this can be a system icon or resource included path, e.g. use `Ti.App.Android.R.drawable.appicon` to use your app icon at `platform/android/res/drawable-*/appicon.png`.
+* <b>largeIcon</b> - (Optional)The large icon of the notification. See icon for more info.
 * <b>repeat</b> - (Optional) (int) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.
 
 Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from the current time If second is provided, alarm will be set to now plus the number of seconds provided; if minute is provided, alarm will be set for now plus the number of minutes provided.
