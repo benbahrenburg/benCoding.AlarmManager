@@ -16,6 +16,9 @@ import org.appcelerator.titanium.TiApplication;
 
 import android.R;
 import android.app.Notification;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.NotificationCompat.BigTextStyle;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.net.Uri;
@@ -23,6 +26,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 
 public class AlarmNotificationListener extends BroadcastReceiver {
     
@@ -44,6 +50,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	utils.debugLog("contentText is " + contentText);
     	String className = bundle.getString("notification_root_classname");
     	utils.debugLog("className is " + className);
+    	
     	boolean hasIcon = bundle.getBoolean("notification_has_icon", true);
         int icon = R.drawable.stat_notify_more;        
         if(hasIcon){
@@ -52,6 +59,16 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         }else{
         	utils.debugLog("No icon provided, default will be used");
         }
+        
+      boolean hasLargeIcon = bundle.getBoolean("notification_has_large_icon", true);
+        int largeIcon = R.drawable.stat_notify_more;        
+        if(hasLargeIcon){
+        	largeIcon = bundle.getInt("notification_large_icon",R.drawable.stat_notify_more);
+        	utils.debugLog("User provided a large icon of " + largeIcon);
+        }else{
+        	utils.debugLog("No large icon provided, default will be used");
+        }
+        
         String soundPath = bundle.getString("notification_sound");
         boolean hasCustomSound = !utils.isEmptyString(soundPath);
         //Add default notification flags
@@ -67,18 +84,28 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	
     	Intent notifyIntent =createIntent(className);
    
-    	Notification notification = new Notification(icon, contentTitle, System.currentTimeMillis());		 
+    	
     	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), 
     													  requestCode, notifyIntent,  
     													  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
+    													  
+    	Bitmap bm = BitmapFactory.decodeResource(context.getResources(), largeIcon);
+    	
+    	NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
+    	  .setContentTitle(contentTitle)
+    	  .setContentText(contentText)
+    	  .setStyle(new NotificationCompat.BigTextStyle()
+            .bigText(contentText))
+    	  .setSmallIcon(icon)
+    	  .setLargeIcon(bm)
+    	  .setWhen(System.currentTimeMillis())
+    	  .setContentIntent(sender);
   
     	
     	utils.debugLog("setting notification flags"); 
-    	notification = createNotifyFlags(notification,playSound,hasCustomSound,soundPath,doVibrate,showLights);
-    	utils.debugLog("setLatestEventInfo"); 
-    	notification.setLatestEventInfo(TiApplication.getInstance().getApplicationContext(), contentTitle,contentText, sender);
+    	notificationBuilder = createNotifyFlags(notificationBuilder,playSound,hasCustomSound,soundPath,doVibrate,showLights);
     	utils.debugLog("Notifying using requestCode =" + requestCode);        
-    	notificationManager.notify(requestCode, notification);
+    	notificationManager.notify(requestCode, notificationBuilder.build());
     	utils.infoLog("You should now see a notification");
 
     	if (bundle.getLong("notification_repeat_ms", 0) > 0) {
@@ -130,31 +157,39 @@ public class AlarmNotificationListener extends BroadcastReceiver {
 		am.set(AlarmManager.RTC_WAKEUP, ms, sender);
 		
     } 
-    private Notification createNotifyFlags(Notification notification, boolean playSound, boolean hasCustomSound, String soundPath, boolean doVibrate, boolean showLights){
-    	//Set the notifications flags
-    	if(playSound){
-    		if(hasCustomSound){
-    			notification.sound = Uri.parse(soundPath);
-    		}else{
-    			notification.defaults |= Notification.DEFAULT_SOUND;
+    
+    
+    private NotificationCompat.Builder createNotifyFlags(NotificationCompat.Builder notificationBuilder, boolean playSound, boolean hasCustomSound, String soundPath, boolean doVibrate, boolean showLights){
+
+    	int defaults = 0;
+    	
+    	if (playSound) {
+    	  if (hasCustomSound) {
+    			notificationBuilder.setSound(Uri.parse(soundPath));
+    		} else {
+    			defaults = defaults | Notification.DEFAULT_SOUND;
     		}
     	}
     	
-    	if(doVibrate){
-    		notification.defaults |=Notification.DEFAULT_VIBRATE;
-    	}
-    	if(showLights){
-    		notification.defaults |=Notification.DEFAULT_LIGHTS;
-    		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-    	}
-    	if (playSound && !hasCustomSound && doVibrate && showLights){
-    		notification.defaults = Notification.DEFAULT_ALL;
+    	if (doVibrate) {
+    		defaults = defaults | Notification.DEFAULT_VIBRATE;
     	}
     	
-    	//Set alarm flags
-    	notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_AUTO_CANCEL;
-    	return notification;
+    	if (showLights) {
+    		defaults = defaults | Notification.DEFAULT_LIGHTS;
+    	}
+    	
+    	//if (playSound && !hasCustomSound && doVibrate && showLights){
+    	//	notification.defaults = Notification.DEFAULT_ALL;
+    	//}
+    	
+    	notificationBuilder.setDefaults(defaults);
+    	
+    	notificationBuilder.setOnlyAlertOnce(true);
+    	notificationBuilder.setAutoCancel(true);
+    	return notificationBuilder;
     }
+    
     private Intent createIntent(String className){
 		try {
 			
