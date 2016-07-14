@@ -23,6 +23,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.NotificationCompat.BigTextStyle;
 
 public class AlarmNotificationListener extends BroadcastReceiver {
     
@@ -67,18 +70,25 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	
     	Intent notifyIntent =createIntent(className);
    
-    	Notification notification = new Notification(icon, contentTitle, System.currentTimeMillis());		 
+    	//Notification notification = new Notification(icon, contentTitle, System.currentTimeMillis());		 
     	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), 
     													  requestCode, notifyIntent,  
     													  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
   
-    	
+    	NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+  		TiApplication.getInstance().getApplicationContext())
+  				.setWhen(System.currentTimeMillis())
+  				.setContentText(contentText)
+  				.setContentTitle(contentTitle)
+  				.setSmallIcon(icon)
+  				.setAutoCancel(true)
+  				.setTicker(contentTitle)
+  				.setContentIntent(sender)
+  				.setStyle(new NotificationCompat.BigTextStyle().bigText(contentText)).setOnlyAlertOnce(true).setAutoCancel(true);
     	utils.debugLog("setting notification flags"); 
-    	notification = createNotifyFlags(notification,playSound,hasCustomSound,soundPath,doVibrate,showLights);
-    	utils.debugLog("setLatestEventInfo"); 
-    	notification.setLatestEventInfo(TiApplication.getInstance().getApplicationContext(), contentTitle,contentText, sender);
+    	notificationBuilder = createNotifyFlags(notificationBuilder,playSound,hasCustomSound,soundPath,doVibrate,showLights);
     	utils.debugLog("Notifying using requestCode =" + requestCode);        
-    	notificationManager.notify(requestCode, notification);
+    	notificationManager.notify(requestCode, notificationBuilder.build());
     	utils.infoLog("You should now see a notification");
 
     	if (bundle.getLong("notification_repeat_ms", 0) > 0) {
@@ -130,29 +140,29 @@ public class AlarmNotificationListener extends BroadcastReceiver {
 		am.set(AlarmManager.RTC_WAKEUP, ms, sender);
 		
     } 
-    private Notification createNotifyFlags(Notification notification, boolean playSound, boolean hasCustomSound, String soundPath, boolean doVibrate, boolean showLights){
-    	//Set the notifications flags
-    	if(playSound){
-    		if(hasCustomSound){
-    			notification.sound = Uri.parse(soundPath);
-    		}else{
-    			notification.defaults |= Notification.DEFAULT_SOUND;
-    		}
-    	}
-    	
-    	if(doVibrate){
-    		notification.defaults |=Notification.DEFAULT_VIBRATE;
-    	}
-    	if(showLights){
-    		notification.defaults |=Notification.DEFAULT_LIGHTS;
-    		notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-    	}
+    private NotificationCompat.Builder createNotifyFlags(NotificationCompat.Builder notification, boolean playSound, boolean hasCustomSound, String soundPath, boolean doVibrate, boolean showLights){
+    	//Set the notifications flags    	
     	if (playSound && !hasCustomSound && doVibrate && showLights){
-    		notification.defaults = Notification.DEFAULT_ALL;
+            notification.setDefaults(Notification.DEFAULT_ALL);
+    	} else {
+    		int defaults = 0;
+    		if (showLights) {
+    		    defaults = defaults | Notification.DEFAULT_LIGHTS;
+    		    notification.setLights(0xFF0000FF,200,3000);
+    		}               
+    		if (playSound) {
+    		    defaults = defaults | Notification.DEFAULT_SOUND;
+    		    if(hasCustomSound){
+        			notification.setSound(Uri.parse(soundPath));
+        		}
+    		}
+    		if (doVibrate) {
+    		    defaults = defaults | Notification.DEFAULT_VIBRATE;
+    		}
+    		notification.setDefaults(defaults);
     	}
     	
     	//Set alarm flags
-    	notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_AUTO_CANCEL;
     	return notification;
     }
     private Intent createIntent(String className){

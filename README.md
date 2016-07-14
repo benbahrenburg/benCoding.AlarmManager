@@ -86,6 +86,7 @@ You can create an AlarmService using the below properties:
 * <b>interval</b> - (Optional) The value used to create an interval service. This value must be in milliseconds.
 * <b>forceRestart</b> - (Optional) Force the service to restart if it is already running.
 * <b>repeat</b> - (Optional) Used to schedule a repeating alarm. You can provide a millisecond value or use the words hourly, daily, monthly, yearly.
+* <b>customData</b> - (Optional) (string) Used to pass custom text data to the service ("[]" if empty)
 
 Please note if you omit the day, month, and year parameters the module will assume you mean to make the alarm effective from today and add the number of minutes provided.
 
@@ -179,7 +180,9 @@ ew9.show();
 alarmManager.addAlarmService({
 	//The full name for the service to be called. Find this in your AndroidManifest.xml Titanium creates
 	service:'com.appworkbench.alarmtest.TestserviceService', 		
-	minute:2 //Set the number of minutes until the alarm should go off
+	minute:2, //Set the number of minutes until the alarm should go off
+	customData: JSON.stringify(['item1','item2']) // pass JSON string to service
+	// use JSON.parse(Ti.Android.currentService.getIntent().getStringExtra('customData')) to get the JSON inside the service
 });	
 var ew5 = Ti.UI.createAlertDialog({
 	title:'Info', message:"The Service provided will be started in about 2 minutes",

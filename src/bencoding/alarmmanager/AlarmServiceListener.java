@@ -55,6 +55,7 @@ public class AlarmServiceListener  extends BroadcastReceiver {
       		utils.debugLog("Is this an interval amount " + bundle.getLong("alarm_service_interval", 45*60*1000L));
       		serviceIntent.putExtra("interval", bundle.getLong("alarm_service_interval", 45*60*1000L)); // Default to 45mins
       	}
+        serviceIntent.putExtra("customData",bundle.getString("customData","[]"));
         context.startService(serviceIntent); 
         utils.infoLog("Alarm Service Started");	
     }
