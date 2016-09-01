@@ -26,6 +26,9 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.NotificationCompat.BigTextStyle;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
+
 
 public class AlarmNotificationListener extends BroadcastReceiver {
     
@@ -55,6 +58,16 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         }else{
         	utils.debugLog("No icon provided, default will be used");
         }
+
+				boolean hasLargeIcon = bundle.getBoolean("notification_has_large_icon", true);
+				int largeIcon = R.drawable.stat_notify_more;
+				if(hasLargeIcon){
+					largeIcon = bundle.getInt("notification_large_icon",R.drawable.stat_notify_more);
+					utils.debugLog("User provided a large icon of " + largeIcon);
+				} else {
+					utils.debugLog("No large icon provided, default will be used");
+				}
+
         String soundPath = bundle.getString("notification_sound");
         boolean hasCustomSound = !utils.isEmptyString(soundPath);
         //Add default notification flags
@@ -74,6 +87,8 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(), 
     													  requestCode, notifyIntent,  
     													  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
+
+			Bitmap bm = BitmapFactory.decodeResource(context.getResources(), largeIcon);
   
     	NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
   		TiApplication.getInstance().getApplicationContext())
@@ -81,6 +96,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
   				.setContentText(contentText)
   				.setContentTitle(contentTitle)
   				.setSmallIcon(icon)
+					.setLargeIcon(bm)
   				.setAutoCancel(true)
   				.setTicker(contentTitle)
   				.setContentIntent(sender)
