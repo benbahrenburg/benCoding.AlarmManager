@@ -5,3 +5,4 @@ build.log
 libs/
 build
 bin
+.DS_Store

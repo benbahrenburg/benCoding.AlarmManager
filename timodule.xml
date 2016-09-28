@@ -5,9 +5,10 @@
         <manifest>
             <application>
             	<receiver android:name="bencoding.alarmmanager.AlarmNotificationListener" />
-            	<receiver android:name="bencoding.alarmmanager.AlarmServiceListener" /> 
+                <receiver android:name="bencoding.alarmmanager.AlarmServiceListener" />
             </application>
             <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
         </manifest>
     </android>
 </ti:module>
