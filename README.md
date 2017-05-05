@@ -1,31 +1,31 @@
-<h1>bencoding.AlarmManager Module</h1>
+# bencoding.AlarmManager Module
 
 The bencoding.AlarmManager module enables you to use the native Android AlarmManager in your Titanium apps to schedule notifications and services.
 
 This project can be found on github at [https://github.com/benbahrenburg/benCoding.AlarmManager](https://github.com/benbahrenburg/benCoding.AlarmManager)
 
-<h2>IMPORTANT</h2>
+## IMPORTANT
 This module, provides access to the Android AlarmManager, which works very differently then iOS Local Notifications.  Please read the Android Docs to understand the limitations and differences between these to very different approaches. Android docs are available [here](http://developer.android.com/reference/android/app/AlarmManager.html).
 
-<h2>ABOUT ALARMS</h2>
+ ## ABOUT ALARMS
 Here you will find two ways to create alarms: *addAlarmNotification* and *addAlarmService*. The first will create a notification to be triggered at certain date/time *but* if the device is restarted those notifications will be lost. If you need those notifications, use the service method (maybe you could need the [bootReceiver](https://github.com/benbahrenburg/benCoding.Android.Tools/blob/master/documentation/bootreceiver.md) tool). 
 
-<h2>SUPPORT</h2>
+## SUPPORT
 No project, "how do I", or "can it" support is provided for this module. The code is available for your reference and usage. If you find an issue and want to contribute Pull Requests are appreciated.  If you are interested in being a contributor and helping with community support please contact me via Twitter.
 
-<h2>Before you start</h2>
-* This is an Android module designed to work with Titanium SDK 3.2.0 or greater.
+## Before you start
+* This is an Android module designed to work with Titanium SDK 6.0.0 or greater.
 * Before getting start please note you need to compile this module yourself
 
-<h2>Building from source</h2>
+## Building from source
 
 If you are building from source you will need to do the following:
 * Update your .classpath file fit your environment
 * Update the build.properties to have the correct paths for your environment
 
-<h2>Setup</h2>
+## Setup
 * Compile the module
-* Install the bencoding.alarmmanager module. If you need help here is a "How To" [guide](https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules). 
+* Install the bencoding.alarmmanager module. If you need help here is a "How To" [guide](http://docs.appcelerator.com/platform/latest/#!/guide/Using_a_Module). 
 * You can now use the module via the commonJS require method, example shown below.
 * You will also need to add the receivers into your tiapp.xml file.
 
@@ -35,9 +35,9 @@ var alarmManager = require('bencoding.alarmmanager').createAlarmManager();
 
 Now we have the module installed and avoid in our project we can start to use the components, see the feature guide below for details.
 
-<h2>Methods</h2>
+## Methods
 
-<h3>addAlarmNotification</h3>
+### addAlarmNotification
 The addAlarmNotification allows you to schedule an Alarm that will then create an notification.
 
 You can create an AlarmNotification using the below properties:
@@ -68,10 +68,10 @@ The valid repeat options are:
 
 You can also provide a millisecond value to schedule your own repeat frequency.
 
-<h3>addAlarmService</h3>
+### addAlarmService
 The addAlarmService allows you to schedule an Alarm that will run a service within your Titanium App.
 
-Before using this method you will need to define a service and re-compile your project. After recompiling your project open your /build/AndroidManifest.xml to file your ifull service name.  This is important as Titanium generates this name. To learn more about Android Services please read the documentation [here](http://developer.appcelerator.com/apidoc/mobile/latest/Titanium.Android.Service-object).
+Before using this method you will need to define a service and re-compile your project. After recompiling your project open your /build/AndroidManifest.xml to file your ifull service name.  This is important as Titanium generates this name. To learn more about Android Services please read the documentation [here](http://docs.appcelerator.com/platform/latest/#!/api/Titanium.Android.Service).
 
 You can create an AlarmService using the below properties:
 
@@ -98,7 +98,7 @@ The valid repeat options are:
 
 You can also provide a millisecond value to schedule your own repeat frequency.
 
-<h3>cancelAlarmNotification</h3>
+### cancelAlarmNotification
 This method cancels the alarm linked to the requestCode provided when calling the cancelAlarmNotification method.
 
 <b>Below parameters:</b>
@@ -110,7 +110,7 @@ This method cancels the alarm linked to the requestCode provided when calling th
 alarmManager.cancelAlarmNotification(41);	
 </code></pre>
 
-<h3>cancelAlarmService</h3>
+### cancelAlarmService
 This method cancels the alarm linked to the requestCode provided when calling the cancelAlarmService method.
 
 <b>Below parameters:</b>
@@ -122,7 +122,7 @@ This method cancels the alarm linked to the requestCode provided when calling th
 alarmManager.cancelAlarmService(41);	
 </code></pre>
 
-<h3>Method Usage Example</h3>
+### Method Usage Example
 The below example shows how to use all of the methods. For additional samples please see the example folder contained within the module or [here on Github](https://github.com/benbahrenburg/benCoding.SMS/tree/master/example).
 
 <pre><code>
@@ -216,24 +216,24 @@ ew10.show();
             	
 </code></pre>
 
-<h2>FAQ</h2>
+## FAQ
 
-<h3>Can I schedule application events?</h3>
+### Can I schedule application events?
 Since your application needs to be active to receive these events it is best to use the Alarm Service to schedule a background service in your application. This will ensure the app is awake and you can generate events from there.
 
-<h3>Can I schedule more then one alarm?</h3>
+### Can I schedule more then one alarm?
 To schedule multiple alarms provide a unique requestCode when adding your alarms. This will allow you to create several different alarms. If you later want to cancel the alarms, you will need to provide the requestCode used when creating the alarm.
 
-<h3>How does cancel work?</h3>
+### How does cancel work?
 To cancel a specific alarm please provide the requestCode used when creating the alarm. If you did not provide a requestCode leave the parameter empty for the cancel method.
 
-<h3>Can I use my own Notification icons?</h3>
+### Can I use my own Notification icons?
 Yes but the URL must be an image located in Resources/android/images/ or an Android content URI.
 
-<h3>My project isn't receiving alarm</h3>
+### My project isn't receiving alarm
 Please make sure you have the correct receiver entries setup in your tiapp.xml file.  See the example tiapp.xml for details. Additionally after adding the receiver entries you will need to clean your project and relaunch the emulator.
 
-<h3>Why does it restart my app when I click on the notification?</h3>
+### Why does it restart my app when I click on the notification?
 You need to make sure you have the singleTop launchMode set in your tiapp.xml file.  See below for a snippet and the ExampleProject for an full example.
 
     <android xmlns:android="http://schemas.android.com/apk/res/android">
@@ -258,28 +258,28 @@ You need to make sure you have the singleTop launchMode set in your tiapp.xml fi
     </android>
 
 
-<h3>What happens to my alarms when the user uninstalls the app?</h3>
+### What happens to my alarms when the user uninstalls the app?
 Android removes your alarms when the user uninstalls your app.
 
-<h3>Where do I find the testservice.js file</h3>
+### Where do I find the testservice.js file
 The testservice.js file can be copied from the KitchenSink example provided by Appcelerator. If you need a copy of this file you can find it in their github account here [https://github.com/appcelerator/titanium_mobile/blob/master/demos/KitchenSink/Resources/android/testservice.js](https://github.com/appcelerator/titanium_mobile/blob/master/demos/KitchenSink/Resources/android/testservice.js)
 
-<h3>My Project can't find testservice.js</h3>
+### My Project can't find testservice.js
 I would recommend trying different paths in your app, for example the root of your project, or platform/android, or Resoures/Android .  Depending on your version of Titanium the answer could be different.
 
-<h2>Licensing</h2>
+## Licensing
 
 This project is licensed under the OSI approved Apache Public License (version 2). For details please see the license associated with each project.
 
 Developed by [Ben Bahrenburg](http://bahrenburgs.com) available on twitter [@benCoding](http://twitter.com/benCoding)
 
-<h2>Learn More</h2>
+## Learn More
 
-<h3>Twitter</h3>
+### Twitter
 
 Please consider following the [@benCoding Twitter](http://www.twitter.com/benCoding) for updates 
 and more about Titanium.
 
-<h3>Blog</h3>
+### Blog
 
 For module updates, Titanium tutorials and more please check out my blog at [benCoding.Com](http://benCoding.com). 
