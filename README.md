@@ -50,8 +50,8 @@ You can create an AlarmNotification using the below properties:
 * <b>year</b> - (Optional) (int) The year you want to start the alarm
 * <b>contentTitle</b> - (Required) (string) The title of the notification
 * <b>contentText</b> - (Required) (string) The text of the notification
-* <b>playSound</b> (Optional) (bool) Play the default notification sound when alarm triggered. 
-* <b>sound</b> (Optional) (string) URL to the sound to play.
+* <b>playSound</b> (Optional) (bool) Play a notification sound when alarm triggered. If <i>sound</i> is not set, the default notification sound is played.
+* <b>sound</b> (Optional) (string) URL to a custom sound to play.
 * <b>vibrate</b> (Optional) (bool) Vibrate the device on notification. Please note this requires the vibrate permission.
 * <b>showLights</b> (Optional) (bool) Activate notification lights on device when alarm triggered.
 * <b>icon</b> - (Optional)The icon of the notification, this can be a system icon or resource included path, e.g. use `Ti.App.Android.R.drawable.appicon` to use your app icon at `platform/android/res/drawable-*/appicon.png`.
