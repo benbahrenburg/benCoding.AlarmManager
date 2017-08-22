@@ -149,13 +149,15 @@ public class AlarmNotificationListener extends BroadcastReceiver {
     		if (showLights) {
     		    defaults = defaults | Notification.DEFAULT_LIGHTS;
     		    notification.setLights(0xFF0000FF,200,3000);
-    		}               
-    		if (playSound) {
-    		    defaults = defaults | Notification.DEFAULT_SOUND;
-    		    if(hasCustomSound){
-        			notification.setSound(Uri.parse(soundPath));
-        		}
     		}
+        // DEFAULT_SOUND overrides custom sound, so never set both               
+        if (playSound) {
+            if(hasCustomSound){
+              notification.setSound(Uri.parse(soundPath));
+            } else {
+              defaults = defaults | Notification.DEFAULT_SOUND;
+            }
+        }               
     		if (doVibrate) {
     		    defaults = defaults | Notification.DEFAULT_VIBRATE;
     		}
