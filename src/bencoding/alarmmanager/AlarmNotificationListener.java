@@ -17,6 +17,8 @@ import org.appcelerator.titanium.TiApplication;
 import android.R;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.NotificationChannel;
+import android.media.AudioAttributes;
 import android.app.PendingIntent;
 import android.net.Uri;
 import android.content.BroadcastReceiver;
@@ -64,6 +66,10 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         utils.debugLog("On notification vibrate? " + new Boolean(doVibrate).toString());
         boolean showLights =  bundle.getBoolean("notification_show_lights",false);
         utils.debugLog("On notification show lights? " + new Boolean(showLights).toString());
+				String channelName = bundle.getString("notification_channel_name");
+				if (utils.isEmptyString(channelName)) {
+					channelName = "notification";
+				}
 
         notificationManager = (NotificationManager) TiApplication.getInstance().getSystemService(TiApplication.NOTIFICATION_SERVICE);
     	utils.debugLog("NotificationManager created");
@@ -77,13 +83,38 @@ public class AlarmNotificationListener extends BroadcastReceiver {
             notifyIntent.putExtra("customData", customData);
         }
 
-    	//Notification notification = new Notification(icon, contentTitle, System.currentTimeMillis());
     	PendingIntent sender = PendingIntent.getActivity( TiApplication.getInstance().getApplicationContext(),
     													  requestCode, notifyIntent,
     													  PendingIntent.FLAG_UPDATE_CURRENT | Notification.FLAG_AUTO_CANCEL);
+			
+			String channelId = "default";
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+				NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+				if (playSound) {
+  				// IMPORTANCE_DEFAULT has by default sound so we only have to set custom sound
+				  if (hasCustomSound) {
+				    AudioAttributes.Builder attrs = new AudioAttributes.Builder();
+				    attrs.setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION);
+				    attrs.setUsage(AudioAttributes.USAGE_NOTIFICATION);
+				    channel.setSound(Uri.parse(soundPath), attrs.build());
+				  }
+				} else {
+				  channel.setSound(null, null);
+				}
+				channel.enableLights(showLights);
+				if (doVibrate) {
+				  channel.enableVibration(doVibrate); 
+				} else {
+				  // Bug - see: https://stackoverflow.com/a/47646166/1294832
+				  channel.setVibrationPattern(new long[]{ 0 });
+				  channel.enableVibration(true);
+				}
+				notificationManager.createNotificationChannel(channel);
+			}
+			
 
     	NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
-  		TiApplication.getInstance().getApplicationContext())
+  		TiApplication.getInstance().getApplicationContext(), channelId)
   				.setWhen(System.currentTimeMillis())
   				.setContentText(contentText)
   				.setContentTitle(contentTitle)
@@ -107,7 +138,7 @@ public class AlarmNotificationListener extends BroadcastReceiver {
 
     	Intent intent = new Intent(TiApplication.getInstance().getApplicationContext(), AlarmNotificationListener.class);
     	// Use the same extras as the original notification
-    	intent.putExtras(bundle);
+    	
 
     	// Update date and time by repeat interval (in milliseconds)
 		int day = bundle.getInt("notification_day");
@@ -123,12 +154,29 @@ public class AlarmNotificationListener extends BroadcastReceiver {
 
     	Calendar now = Calendar.getInstance();
     	long repeat_ms = bundle.getLong("notification_repeat_ms", 0);
+    	if (repeat_ms == 0) {
+      	utils.infoLog("repeat_ms is 0, no good!");
+    	  // Else we can end into an infinite loop below.
+    	  return;
+    	}
     	int repeat_s = (int)repeat_ms / 1000;
 
 		// Add frequence until cal > now
 		while (now.getTimeInMillis() > cal.getTimeInMillis()) {
 			cal.add(Calendar.SECOND, repeat_s);
+			utils.infoLog("Add second");
 		}
+		
+		utils.infoLog("Update bundle with new calendar: " + cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(Calendar.SECOND));
+		bundle.putInt("notification_year", cal.get(Calendar.YEAR));
+		bundle.putInt("notification_month", cal.get(Calendar.MONTH));
+		bundle.putInt("notification_day", cal.get(Calendar.DAY_OF_MONTH));
+		bundle.putInt("notification_hour", cal.get(Calendar.HOUR_OF_DAY));
+		bundle.putInt("notification_minute", cal.get(Calendar.MINUTE));
+		bundle.putInt("notification_second", cal.get(Calendar.SECOND));
+		
+		// Update intent with this updated bundle.
+		intent.putExtras(bundle);
 
     	int requestCode = bundle.getInt("notification_request_code", AlarmmanagerModule.DEFAULT_REQUEST_CODE);
 		intent.setData(Uri.parse("alarmId://" + requestCode));
@@ -160,7 +208,10 @@ public class AlarmNotificationListener extends BroadcastReceiver {
         // DEFAULT_SOUND overrides custom sound, so never set both
         if (playSound) {
             if(hasCustomSound){
-              notification.setSound(Uri.parse(soundPath));
+              // if >= 26, we set it on the channel.
+              //if (android.os.Build.VERSION.SDK_INT < 26) {
+                notification.setSound(Uri.parse(soundPath));
+              //}
             } else {
               defaults = defaults | Notification.DEFAULT_SOUND;
             }

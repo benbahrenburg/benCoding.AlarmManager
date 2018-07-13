@@ -70,6 +70,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		String contentTitle = "";
 		String contentText = "";
 		String notificationSound = "";
+		String channelName = "notification";
 		boolean playSound = optionIsEnabled(args,"playSound");
 		boolean doVibrate = optionIsEnabled(args,"vibrate");
 		boolean showLights = optionIsEnabled(args,"showLights");
@@ -83,6 +84,10 @@ public class AlarmManagerProxy extends KrollProxy {
 					contentText = TiConvert.toString(args, TiC.PROPERTY_CONTENT_TEXT);
 				};
 			}
+
+		if (args.containsKey("channelName")) {
+			channelName = TiConvert.toString(args, "channelName");
+		}
 
 		if (args.containsKey(TiC.PROPERTY_ICON)) {
 			Object icon = args.get(TiC.PROPERTY_ICON);
@@ -116,6 +121,7 @@ public class AlarmManagerProxy extends KrollProxy {
 		intent.putExtra("notification_requestcode", requestCode);
 		intent.putExtra("notification_root_classname", AlarmmanagerModule.rootActivityClassName);
 		intent.putExtra("notification_request_code", requestCode);
+		intent.putExtra("notification_channel_name", channelName);
 
 		// As of API 19 setRepeating == setInexactRepeating, see also:
 		// http://developer.android.com/reference/android/app/AlarmManager.html#setRepeating(int, long, long, android.app.PendingIntent)
@@ -188,11 +194,11 @@ public class AlarmManagerProxy extends KrollProxy {
 		long freqResults = utils.DAILY_MILLISECONDS;
 		Object repeat = args.get("repeat");
 		if (repeat instanceof Number) {
-			utils.debugLog("Repeat value provided in milliseconds found");
+			utils.infoLog("Repeat value provided in milliseconds found");
 			freqResults = ((Number)repeat).longValue();
 		} else {
 			String repeatValue = TiConvert.toString(repeat);
-			utils.debugLog("Repeat value of " + repeatValue + " found");
+			utils.infoLog("Repeat value of " + repeatValue + " found");
 			if(repeatValue.toUpperCase()=="HOURLY"){
 				freqResults=utils.HOURLY_MILLISECONDS;
 			}
@@ -206,7 +212,7 @@ public class AlarmManagerProxy extends KrollProxy {
 				freqResults=utils.YEARLY_MILLISECONDS;
 			}
 		}
-		utils.debugLog("Repeat Frequency in milliseconds is " + freqResults);
+		utils.infoLog("Repeat Frequency in milliseconds is " + freqResults);
 		return freqResults;
 	}
 	@Kroll.method
